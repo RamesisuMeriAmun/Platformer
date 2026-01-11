@@ -11,7 +11,7 @@ FPS = 60
 
 
 def get_block_asset(path_parts, size, rect_coords):
-    path = join("assets", *path_parts)
+    path = join("..", "Images", *path_parts)
     if not os.path.exists(path):
         # Pinker Platzhalter, falls Datei fehlt
         surf = pygame.Surface((size, size))
@@ -28,7 +28,8 @@ class LevelEditor:
     def __init__(self):
         pygame.init()
         self.window = pygame.display.set_mode((WIDTH, HEIGHT))
-        pygame.display.set_caption("Level Editor - Blöcke 1-5 | Zoom [+/-] | Save [O]")
+        pygame.display.set_caption("Level Editor - Blöcke 1-5 | Zoom [+/-] | Save [O] |"
+                                   " alte Karte laden [L] | Gitter [G]")
         self.clock = pygame.time.Clock()
         self.font = pygame.font.SysFont("Arial", 18)
 
@@ -41,7 +42,6 @@ class LevelEditor:
         self.tilemap = {}
         self.offgrid_tiles = []
 
-        # --- ASSETS (Hier sind jetzt alle 5 Blöcke drin) ---
         self.assets = {
             "Block1": get_block_asset(["Terrain", "Terrain.png"], 48, (96, 64, 48, 48)),  # Braune Erde
             "Block2": get_block_asset(["Terrain", "Terrain.png"], 48, (0, 64, 48, 48)),  # Holz
@@ -57,25 +57,13 @@ class LevelEditor:
         self.current_type_idx = 0
 
     def load_simple_asset(self, d1, d2, d3, w, h):
-        path = join("assets", d1, d2, d3)
+        path = join("..", "Images", d1, d2, d3)
         if os.path.exists(path):
             img = pygame.image.load(path).convert_alpha()
             surf = pygame.Surface((w, h), pygame.SRCALPHA)
             surf.blit(img, (0, 0), (0, 0, w, h))
             return pygame.transform.scale2x(surf)
         return pygame.Surface((w * 2, h * 2))
-
-    def apply_autotile(self):
-        """Wandelt Block 1-5 basierend auf Nachbarn um (Beispiel für Block 1 & 2)"""
-        new_map = {}
-        for loc, t_type in self.tilemap.items():
-            if t_type in ["Block1", "Block2"]:
-                x, y = map(int, loc.split(";"))
-                above = f"{x};{y - 1}"
-                new_map[loc] = "Block1" if above not in self.tilemap else "Block2"
-            else:
-                new_map[loc] = t_type
-        self.tilemap = new_map
 
     def save_map(self):
         data = {"grid": self.tilemap, "offgrid": self.offgrid_tiles}
@@ -148,8 +136,8 @@ class LevelEditor:
                 self.window.blit(preview, mpos)
 
             # UI Info
-            info = self.font.render(f"Zoom: {int(self.zoom * 100)}% | Objekt: {curr_type} | [O] Save", True,
-                                    (255, 255, 255))
+            info = self.font.render(f"Zoom: {int(self.zoom * 100)}% | Objekt: {curr_type} | [O] Save | [L] altes Level laden | [G] Grid wechseln",
+                                    True, (255, 255, 255))
             self.window.blit(info, (10, 10))
 
             # Events
@@ -186,7 +174,6 @@ class LevelEditor:
                     if event.key == pygame.K_MINUS or event.key == pygame.K_KP_MINUS: self.zoom = max(0.2,
                                                                                                       self.zoom - 0.1)
                     if event.key == pygame.K_g: self.ongrid = not self.ongrid
-                    if event.key == pygame.K_t: self.apply_autotile()
                     if event.key == pygame.K_o: self.save_map()
                     if event.key == pygame.K_l: self.load_map()
 

@@ -1,0 +1,9 @@
+#Game
+WIDTH = 1000
+HEIGHT = 750
+FPS = 60
+
+#Player
+VEL = 5
+GRAVITY = 1
+ANIMATION_DELAY = 3
