@@ -18,9 +18,9 @@ class Game:
 
         self.background, self.bg_image = background.load_background("Gray.png")
 
-        self.player = player.Player(100, 100, 50, 50)
+        self.player = player.Player(100, 100, 40, 50)
 
-        self.objects = level.load_level("../Data/Maps/map.json")
+        self.objects = level.load_level("map.json")
 
     def draw(self):
         #Background
@@ -43,7 +43,7 @@ class Game:
                     pygame.quit()
                     sys.exit()
 
-            self.player.loop(constants.FPS)
+            self.player.loop(self.objects)
             for obj in self.objects:
                 if hasattr(obj, "loop"):
                     obj.loop()

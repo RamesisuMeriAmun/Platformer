@@ -1,9 +1,12 @@
-#Game
+# Game
 WIDTH = 1000
 HEIGHT = 750
 FPS = 60
 
-#Player
+# Player
 VEL = 5
-GRAVITY = 1
-ANIMATION_DELAY = 3
+GRAVITY = 0.3
+ANIMATION_DELAY = 5
+
+# Blocks
+BLOCK_SIZE = 96

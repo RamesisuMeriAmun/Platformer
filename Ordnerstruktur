@@ -1,0 +1,23 @@
+Abyssplatformer/
+│
+├── main.py
+├── __init__.py
+│
+├──Skripte/
+│    ├── __init__.py
+│    ├── sprites.py
+│    ├── game.py
+│    ├── level.py
+│    ├── player.py
+│    ├── constants.py
+│    │
+│    └── Assets/
+│       ├── __init__.py
+│        ├── objects.py
+│        ├── blocks.py
+│        └── objects_class.py
+└── Data/
+    ├──Maps/
+    │   ├── editor.py
+    │   └── map.json
+    └── Images

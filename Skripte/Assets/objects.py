@@ -1,8 +1,8 @@
 import pygame
 
 from .objects_class import Object
-from sprites import load_sprite_sheets
-from constants import ANIMATION_DELAY
+from Skripte.sprites import load_sprite_sheets
+from Skripte.constants import ANIMATION_DELAY
 
 
 class Lava(Object):
@@ -72,3 +72,12 @@ class Checkpoint(Object):
         self.image = sprites[idx]
         self.animation_count += 1
         self.mask = pygame.mask.from_surface(self.image)
+
+
+OBJECTS_EDITOR_TILE_MAPPING = {
+    "Fire": {"class": Fire, "width": 16, "height": 32, "auto_on": True},
+    "Lava": {"class": Lava, "width": 96, "height": 20},
+    "Trampoline": {"class": Trampoline, "width": 28, "height": 28},
+    "Checkpoint": {"class": Checkpoint, "width": 64, "height": 64}
+}
+

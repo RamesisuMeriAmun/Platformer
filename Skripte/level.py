@@ -1,10 +1,15 @@
 import os
 import json
-from Assets import blocks
-from Assets import objects as o
+from Skripte.Assets.blocks import Block
+from Skripte.Assets import objects as o
+from Skripte.constants import BLOCK_SIZE
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DATA_DIR = os.path.join(BASE_DIR, "Data", "Maps")
 
 
-def load_level(path):
+def load_level(filename):
+    path = os.path.join(DATA_DIR, filename)
     if not os.path.exists(path):
         print(f"Fehler: {path} nicht gefunden!")
         return []
@@ -14,31 +19,32 @@ def load_level(path):
 
     objects = []
 
-    for loc, t_type in data["grid"].items():
+    # Grid-Objekte (Blöcke)
+    for loc, t_type in data.get("grid", {}).items():
         coords = list(map(int, loc.split(";")))
-        x = coords[0] * 96
-        y = coords[1] * 96
+        x = coords[0] * BLOCK_SIZE
+        y = coords[1] * BLOCK_SIZE
 
-        if t_type == "Block1":
-            objects.append(blocks.Block(x, y, 96))
-        elif t_type == "Block2":
-            objects.append(blocks.Block2(x, y, 96))
-        elif t_type == "Block3":
-            objects.append(blocks.Block3(x, y, 96))
-        elif t_type == "Block4":
-            objects.append(blocks.Block4(x, y, 96))
+        if t_type in Block.BLOCKS_EDITOR_TILE_MAPPING:
+            objects.append(Block(x, y, t_type))
+        else:
+            print(f"Warnung: unbekannter Block-Typ {t_type}")
 
+    # Offgrid-Objekte (alle anderen)
     for item in data.get("offgrid", []):
         ox, oy = item["pos"]
-        if item["type"] == "Checkpoint":
-            objects.append(o.Checkpoint(ox, oy, 64, 64))
-        elif item["type"] == "Trampoline":
-            objects.append(o.Trampoline(ox, oy, 28, 28))
-        elif item["type"] == "Fire":
-            fire_obj = o.Fire(ox, oy, 16, 32)
-            fire_obj.on()
-            objects.append(fire_obj)
-        elif item["type"] == "Lava":
-            objects.append(o.Lava(ox, oy, 96, 20))
+        typ = item["type"]
+
+        if typ in o.OBJECTS_EDITOR_TILE_MAPPING:
+            params = o.OBJECTS_EDITOR_TILE_MAPPING[typ]
+            cls = params["class"]
+            width = params.get("width", 32)
+            height = params.get("height", 32)
+            obj = cls(ox, oy, width, height)
+            if params.get("auto_on"):
+                obj.on()
+            objects.append(obj)
+        else:
+            print(f"Warnung: unbekannter Offgrid-Typ {typ}")
 
     return objects

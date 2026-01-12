@@ -1,68 +1,45 @@
 import pygame
-from os.path import join
+import os
+from Skripte.Assets.objects_class import Object
+from Skripte.constants import BLOCK_SIZE
 
-from .objects_class import Object
-
-
-def load_block(size):
-    path = join("assets", "Terrain", "Terrain.png")
-    image = pygame.image.load(path).convert_alpha()
-    surface = pygame.Surface((size, size), pygame.SRCALPHA, 32)
-    rect = pygame.Rect(96, 64, size, size)
-    surface.blit(image, (0, 0), rect)
-    return pygame.transform.scale2x(surface)
-
-
-def load_block_2(size):
-    path = join("assets", "Terrain", "Terrain.png")
-    image = pygame.image.load(path).convert_alpha()
-    surface = pygame.Surface((size, size), pygame.SRCALPHA, 32)
-    rect = pygame.Rect(0, 64 * 1, size, size)
-    surface.blit(image, (0, 0), rect)
-    return pygame.transform.scale2x(surface)
-
-
-def load_block_3(size):
-    path = join("assets", "Terrain", "Terrain.png")
-    image = pygame.image.load(path).convert_alpha()
-    surface = pygame.Surface((size, size), pygame.SRCALPHA, 32)
-    rect = pygame.Rect(0, 64 * 2, size, size)
-    surface.blit(image, (0, 0), rect)
-    return pygame.transform.scale2x(surface)
-
-
-def load_block_4(size):
-    path = join("assets", "Terrain", "Sand Mud Ice.png")
-    image = pygame.image.load(path).convert_alpha()
-    surface = pygame.Surface((size, size), pygame.SRCALPHA, 32)
-    rect = pygame.Rect(64, 0, size, size)
-    surface.blit(image, (0, 0), rect)
-    return pygame.transform.scale2x(surface)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+IMAGE_DIR = os.path.join(BASE_DIR, "Data", "Images")
 
 
 class Block(Object):
-    def __init__(self, x, y, size):
-        super().__init__(x, y, size, size)
-        self.image.blit(load_block(size), (0, 0))
+    BLOCKS_EDITOR_TILE_MAPPING = {
+        "Braune Erde": ("Terrain/Terrain.png", (96, 64, 48, 48)),
+        "Holz": ("Terrain/Terrain.png", (0, 64, 48, 48)),
+        "Busch": ("Terrain/Terrain.png", (0, 64*2, 48, 48)),
+        "Graß": ("Terrain/Sand Mud Ice.png", (64, 0, 48, 48)),
+    }
+
+    def __init__(self, x, y, block_type="Block1"):
+        super().__init__(x, y, BLOCK_SIZE, BLOCK_SIZE)
+
+        if block_type in self.BLOCKS_EDITOR_TILE_MAPPING:
+            image_name, rect_coords = self.BLOCKS_EDITOR_TILE_MAPPING[block_type]
+        else:
+            image_name, rect_coords = None, (0, 0, BLOCK_SIZE, BLOCK_SIZE)
+
+        self.image = self.load_tile(image_name, rect_coords)
         self.mask = pygame.mask.from_surface(self.image)
 
+    @staticmethod
+    def load_tile(image_name, rect_coords):
+        if image_name is None:
+            surf = pygame.Surface((BLOCK_SIZE, BLOCK_SIZE), pygame.SRCALPHA)
+            surf.fill((255, 0, 255))
+            return surf
 
-class Block2(Object):
-    def __init__(self, x, y, size):
-        super().__init__(x, y, size, size)
-        self.image.blit(load_block_2(size), (0, 0))
-        self.mask = pygame.mask.from_surface(self.image)
+        path = os.path.join(IMAGE_DIR, *image_name.split("/"))
+        if not os.path.exists(path):
+            surf = pygame.Surface((BLOCK_SIZE, BLOCK_SIZE), pygame.SRCALPHA)
+            surf.fill((255, 0, 255))
+            return surf
 
-
-class Block3(Object):
-    def __init__(self, x, y, size):
-        super().__init__(x, y, size, size)
-        self.image.blit(load_block_3(size), (0, 0))
-        self.mask = pygame.mask.from_surface(self.image)
-
-
-class Block4(Object):
-    def __init__(self, x, y, size):
-        super().__init__(x, y, size, size)
-        self.image.blit(load_block_4(size), (0, 0))
-        self.mask = pygame.mask.from_surface(self.image)
+        image = pygame.image.load(path).convert_alpha()
+        surface = pygame.Surface((rect_coords[2], rect_coords[3]), pygame.SRCALPHA)
+        surface.blit(image, (0, 0), rect_coords)
+        return pygame.transform.scale(surface, (BLOCK_SIZE, BLOCK_SIZE))
