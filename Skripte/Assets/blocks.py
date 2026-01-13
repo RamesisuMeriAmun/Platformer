@@ -12,6 +12,8 @@ class Block(Object):
         "Braune Erde": ("Terrain/Terrain.png", (96, 64, 48, 48)),
         "Holz": ("Terrain/Terrain.png", (0, 64, 48, 48)),
         "Busch": ("Terrain/Terrain.png", (0, 64*2, 48, 48)),
+        "Stein": ("Terrain/Terrain.png", (0, 0, 48, 48)),
+
         "Graß": ("Terrain/Sand Mud Ice.png", (64, 0, 48, 48)),
         "Ice": ("Terrain/Sand Mud Ice.png", (64*2, 0, 48, 48)),
         "Sand": ("Terrain/Sand Mud Ice.png", (0, 0, 48, 48)),
