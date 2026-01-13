@@ -30,7 +30,16 @@ class Player(pygame.sprite.Sprite):
         self.JUMP_HOLD_FORCE = 0.6
         self.MAX_JUMP_HOLD = 12
 
-        #Kollision
+        # Dash
+        self.dashing = False
+        self.dash_velocity = 15
+        self.dash_duration = 10
+        self.dash_timer = 0
+        self.can_dash = True
+        self.dash_cooldown = 700
+        self.last_dash_time = 0
+
+        # Kollision
         self.blocks = [obj for obj in all_objects if isinstance(obj, Block)]
         self.objects = [obj for obj in all_objects if not isinstance(obj, Block)]
 
@@ -55,6 +64,10 @@ class Player(pygame.sprite.Sprite):
                 self.jump_pressed = True
         else:
             self.jump_pressed = False
+
+        # Dash
+        if keys[pygame.K_LSHIFT]:
+            self.dash()
 
     def move(self, dx, dy):
         self.rect.x += dx
@@ -98,6 +111,18 @@ class Player(pygame.sprite.Sprite):
         if not keys[pygame.K_SPACE] and self.y_vel < 0:
             self.y_vel *= 0.35
 
+    # Dash
+    def dash(self):
+        current_time = pygame.time.get_ticks()
+
+        if current_time - self.last_dash_time >= self.dash_cooldown and self.can_dash:
+            self.dashing = True
+            self.dash_timer = self.dash_duration
+            self.last_dash_time = current_time  # Zeitpunkt speichern
+
+            if self.jump_count > 0:
+                self.can_dash = False
+
     # Collision
     def handle_vertical_collision(self, blocks, dy):
         for block in blocks:
@@ -114,6 +139,7 @@ class Player(pygame.sprite.Sprite):
         self.y_vel = 0
         self.jump_count = 0
         self.jump_hold_time = 0
+        self.can_dash = True
 
     def hit_head(self):
         self.y_vel = 1
@@ -173,18 +199,25 @@ class Player(pygame.sprite.Sprite):
     def loop(self):
         self.handle_input()
 
-        self.y_vel += constants.GRAVITY
+        if self.dashing:
+            self.x_vel = self.dash_velocity if self.direction == "right" else -self.dash_velocity
+            self.y_vel = 0
+            self.dash_timer -= 1
+            if self.dash_timer <= 0:
+                self.dashing = False
+        else:
+            self.y_vel += constants.GRAVITY
         self.falling_time += 1
 
         self.move(self.x_vel, 0)
         self.handle_horizontal_collision(self.blocks)
 
-        self.update_sprite()
-
         self.move(0, self.y_vel)
         self.handle_vertical_collision(self.blocks, self.y_vel)
         self.handle_object_collision(self.objects)
         self.update_jump()
+
+        self.update_sprite()
 
     def draw(self, screen):
         screen.blit(self.sprite, self.sprite.get_rect(midbottom=self.rect.midbottom))
