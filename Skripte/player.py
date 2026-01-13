@@ -15,6 +15,7 @@ class Player(pygame.sprite.Sprite):
         self.animation_count = 0
         self.spawn = (x, y)
         self.is_alive = True
+        self.on_ground = False
 
         self.x_vel = 0
         self.y_vel = 0
@@ -29,6 +30,13 @@ class Player(pygame.sprite.Sprite):
         self.DOUBLE_JUMP_FORCE = 7
         self.JUMP_HOLD_FORCE = 0.6
         self.MAX_JUMP_HOLD = 12
+
+        # Walljump
+        self.wall_jump_force_x = 5
+        self.wall_jump_force_y = 7
+        self.is_on_wall = False
+        self.wall_direction = 0 # -1 = left, 1 = right
+        self.wall_jump_timer = 0
 
         # Dash
         self.dashing = False
@@ -49,13 +57,15 @@ class Player(pygame.sprite.Sprite):
 
     def handle_input(self):
         keys = pygame.key.get_pressed()
-        self.x_vel = 0
 
         # Movement
-        if keys[pygame.K_a]:
-            self.move_left(constants.VEL)
-        elif keys[pygame.K_d]:
-            self.move_right(constants.VEL)
+        if not self.dashing:
+            if self.wall_jump_timer <= 0:
+                self.x_vel = 0
+                if keys[pygame.K_a]:
+                    self.move_left(constants.VEL)
+                elif keys[pygame.K_d]:
+                    self.move_right(constants.VEL)
 
         # Jump
         if keys[pygame.K_SPACE]:
@@ -86,15 +96,21 @@ class Player(pygame.sprite.Sprite):
             self.animation_count = 0
 
     def jump(self):
-        if self.jump_count == 0:
+        if self.on_ground and not self.is_on_wall:
             self.y_vel = -self.JUMP_FORCE
+            self.jump_count = 1
             self.jump_hold_time = 0
+            self.on_ground = False
 
-        if self.jump_count == 1:
+        elif self.is_on_wall:
+            self.y_vel = -self.wall_jump_force_y
+            self.x_vel = -self.wall_direction * self.wall_jump_force_x
+            self.jump_count = 1
+            self.wall_jump_timer = 15
+
+        elif self.jump_count == 1:
             self.y_vel = -self.DOUBLE_JUMP_FORCE
-            self.jump_hold_time = self.MAX_JUMP_HOLD
-
-        self.jump_count += 1
+            self.jump_count = 2
 
     def update_jump(self):
         keys = pygame.key.get_pressed()
@@ -111,17 +127,36 @@ class Player(pygame.sprite.Sprite):
         if not keys[pygame.K_SPACE] and self.y_vel < 0:
             self.y_vel *= 0.35
 
+    def check_grounded(self):
+        floor_rect = pygame.Rect(self.rect.x, self.rect.bottom, self.rect.width, 2)
+
+        found_floor = False
+        for block in self.blocks:
+            if floor_rect.colliderect(block.rect):
+                found_floor = True
+                break
+
+        if found_floor:
+            self.on_ground = True
+            self.jump_count = 0
+            self.can_dash = True
+        else:
+            self.on_ground = False
+            if self.jump_count == 0:
+                self.jump_count = 1
+
     # Dash
     def dash(self):
         current_time = pygame.time.get_ticks()
 
         if current_time - self.last_dash_time >= self.dash_cooldown and self.can_dash:
+            if self.is_on_wall:
+                self.direction = "left" if self.wall_direction == 1 else "right"
+                self.animation_count = 0
+                self.is_on_wall = False
             self.dashing = True
             self.dash_timer = self.dash_duration
-            self.last_dash_time = current_time  # Zeitpunkt speichern
-
-            if self.jump_count > 0:
-                self.can_dash = False
+            self.last_dash_time = current_time
 
     # Collision
     def handle_vertical_collision(self, blocks, dy):
@@ -135,22 +170,27 @@ class Player(pygame.sprite.Sprite):
                     self.hit_head()
 
     def landed(self):
-        self.falling_time = 0
         self.y_vel = 0
-        self.jump_count = 0
-        self.jump_hold_time = 0
-        self.can_dash = True
+        self.falling_time = 0
+        # Den Rest erledigt check_grounded in jedem Frame
 
     def hit_head(self):
         self.y_vel = 1
 
     def handle_horizontal_collision(self, blocks):
+        self.is_on_wall = False
+        self.wall_direction = 0
+
         for block in blocks:
             if self.rect.colliderect(block.rect):
                 if self.x_vel > 0:
                     self.rect.right = block.rect.left
+                    self.is_on_wall = True
+                    self.wall_direction = 1
                 elif self.x_vel < 0:
                     self.rect.left = block.rect.right
+                    self.is_on_wall = True
+                    self.wall_direction = -1
 
     def handle_object_collision(self, objects):
         for obj in objects:
@@ -178,6 +218,10 @@ class Player(pygame.sprite.Sprite):
         sprite_sheet = "idle"
         if self.hit:
             sprite_sheet = "hit"
+        elif self.dashing:
+            sprite_sheet = "run"  # hat keinen eigenen Dash-Sprite
+        elif self.is_on_wall:
+            sprite_sheet = "wall_jump"
         elif self.y_vel < 0:
             sprite_sheet = "jump" if self.jump_count == 1 else "double_jump"
         elif self.y_vel > constants.GRAVITY + 1 and self.jump_count > 0:
@@ -197,7 +241,8 @@ class Player(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.sprite)
 
     def loop(self):
-        self.handle_input()
+        if self.wall_jump_timer > 0:
+            self.wall_jump_timer -= 1
 
         if self.dashing:
             self.x_vel = self.dash_velocity if self.direction == "right" else -self.dash_velocity
@@ -207,13 +252,17 @@ class Player(pygame.sprite.Sprite):
                 self.dashing = False
         else:
             self.y_vel += constants.GRAVITY
-        self.falling_time += 1
+            if self.is_on_wall and self.y_vel > 0:
+                self.y_vel = min(self.y_vel, 2)
 
         self.move(self.x_vel, 0)
         self.handle_horizontal_collision(self.blocks)
 
         self.move(0, self.y_vel)
         self.handle_vertical_collision(self.blocks, self.y_vel)
+
+        self.check_grounded()
+        self.handle_input()
         self.handle_object_collision(self.objects)
         self.update_jump()
 
