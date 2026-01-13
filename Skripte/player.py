@@ -154,6 +154,7 @@ class Player(pygame.sprite.Sprite):
                 self.direction = "left" if self.wall_direction == 1 else "right"
                 self.animation_count = 0
                 self.is_on_wall = False
+                self.can_dash = False
             self.dashing = True
             self.dash_timer = self.dash_duration
             self.last_dash_time = current_time
