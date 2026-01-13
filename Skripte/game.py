@@ -18,20 +18,20 @@ class Game:
 
         self.background, self.bg_image = background.load_background("Gray.png")
 
-        self.player = player.Player(100, 100, 40, 50)
-
         self.objects = level.load_level("map.json")
 
+        self.player = player.Player(100, 100, 40, 50, self.objects)
+
     def draw(self):
-        #Background
+        # Background
         for tile in self.background:
             self.screen.blit(self.bg_image, tile)
 
-        #Objekte
+        # Objekte
         for obj in self.objects:
             obj.draw(self.screen, 0, 0)
 
-        #Player
+        # Player
         self.player.draw(self.screen)
         pygame.display.update()
 
@@ -43,7 +43,7 @@ class Game:
                     pygame.quit()
                     sys.exit()
 
-            self.player.loop(self.objects)
+            self.player.loop()
             for obj in self.objects:
                 if hasattr(obj, "loop"):
                     obj.loop()

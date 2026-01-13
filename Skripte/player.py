@@ -1,10 +1,11 @@
 import pygame
 import constants
 import sprites
+from Skripte.Assets.blocks import Block
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, x, y, width, height):
+    def __init__(self, x, y, width, height, all_objects):
         super().__init__()
         self.rect = pygame.Rect(x, y, width, height)
         self.sprites = sprites.load_sprite_sheets("MainCharacters", "MaskDude", 32, 32, True)
@@ -12,6 +13,7 @@ class Player(pygame.sprite.Sprite):
         self.mask = None
         self.direction = "right"
         self.animation_count = 0
+        self.spawn = (x, y)
 
         self.x_vel = 0
         self.y_vel = 0
@@ -26,6 +28,10 @@ class Player(pygame.sprite.Sprite):
         self.DOUBLE_JUMP_FORCE = 7
         self.JUMP_HOLD_FORCE = 0.6
         self.MAX_JUMP_HOLD = 12
+
+        #Kollision
+        self.blocks = [obj for obj in all_objects if isinstance(obj, Block)]
+        self.objects = [obj for obj in all_objects if not isinstance(obj, Block)]
 
         self.hit = False
 
@@ -92,18 +98,15 @@ class Player(pygame.sprite.Sprite):
             self.y_vel *= 0.35
 
     # Collision
-    def handle_vertical_collision(self, objects, dy):
-        collided_objects = []
-        for obj in objects:
-            if self.rect.colliderect(obj.rect):
+    def handle_vertical_collision(self, blocks, dy):
+        for block in blocks:
+            if self.rect.colliderect(block.rect):
                 if dy > 0:
-                    self.rect.bottom = obj.rect.top
+                    self.rect.bottom = block.rect.top
                     self.landed()
                 elif dy < 0:
-                    self.rect.top = obj.rect.bottom
+                    self.rect.top = block.rect.bottom
                     self.hit_head()
-            collided_objects.append(obj)
-        return collided_objects
 
     def landed(self):
         self.falling_time = 0
@@ -114,13 +117,25 @@ class Player(pygame.sprite.Sprite):
     def hit_head(self):
         self.y_vel = 1
 
-    def handle_horizontal_collision(self, objects):
+    def handle_horizontal_collision(self, blocks):
+        for block in blocks:
+            if self.rect.colliderect(block.rect):
+                if self.x_vel > 0:
+                    self.rect.right = block.rect.left
+                elif self.x_vel < 0:
+                    self.rect.left = block.rect.right
+
+    def handle_object_collision(self, objects):
         for obj in objects:
             if self.rect.colliderect(obj.rect):
-                if self.x_vel > 0:
-                    self.rect.right = obj.rect.left
-                elif self.x_vel < 0:
-                    self.rect.left = obj.rect.right
+                overlap_x = obj.rect.x - self.rect.x
+                overlap_y = obj.rect.y - self.rect.y
+
+                if self.mask.overlap(obj.mask, (overlap_x, overlap_y)):
+                    self.react_to_object(obj)
+
+    def react_to_object(self, obj):
+        print("Collided with", obj)
 
     # Display
     def update_sprite(self):
@@ -145,19 +160,20 @@ class Player(pygame.sprite.Sprite):
     def update_mask(self):
         self.mask = pygame.mask.from_surface(self.sprite)
 
-    def loop(self, objects):
+    def loop(self):
         self.handle_input()
 
         self.y_vel += constants.GRAVITY
         self.falling_time += 1
 
         self.move(self.x_vel, 0)
-        self.handle_horizontal_collision(objects)
+        self.handle_horizontal_collision(self.blocks)
 
         self.update_sprite()
 
         self.move(0, self.y_vel)
-        self.handle_vertical_collision(objects, self.y_vel)
+        self.handle_vertical_collision(self.blocks, self.y_vel)
+        self.handle_object_collision(self.objects)
         self.update_jump()
 
     def draw(self, screen):
