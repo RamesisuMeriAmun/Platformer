@@ -14,6 +14,7 @@ class Player(pygame.sprite.Sprite):
         self.direction = "right"
         self.animation_count = 0
         self.spawn = (x, y)
+        self.is_alive = True
 
         self.x_vel = 0
         self.y_vel = 0
@@ -132,10 +133,19 @@ class Player(pygame.sprite.Sprite):
                 overlap_y = obj.rect.y - self.rect.y
 
                 if self.mask.overlap(obj.mask, (overlap_x, overlap_y)):
-                    self.react_to_object(obj)
+                    self.react_to_object(obj.name)
 
     def react_to_object(self, obj):
-        print("Collided with", obj)
+        if obj == "spikes":
+            self.is_alive = False
+            self.death()
+
+    def death(self):
+        if not self.is_alive:
+            self.rect.topleft = self.spawn
+            self.x_vel = 0
+            self.y_vel = 0
+            self.is_alive = True
 
     # Display
     def update_sprite(self):
@@ -178,4 +188,3 @@ class Player(pygame.sprite.Sprite):
 
     def draw(self, screen):
         screen.blit(self.sprite, self.sprite.get_rect(midbottom=self.rect.midbottom))
-        pygame.draw.rect(screen, (255, 0, 0), self.rect, 2)

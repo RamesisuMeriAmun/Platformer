@@ -13,6 +13,7 @@ class Block(Object):
         "Holz": ("Terrain/Terrain.png", (0, 64, 48, 48)),
         "Busch": ("Terrain/Terrain.png", (0, 64*2, 48, 48)),
         "Graß": ("Terrain/Sand Mud Ice.png", (64, 0, 48, 48)),
+        "Ice": ("Terrain/Sand Mud Ice.png", (64*2, 0, 48, 48)),
     }
 
     def __init__(self, x, y, block_type="Block1"):

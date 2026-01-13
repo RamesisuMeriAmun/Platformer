@@ -48,7 +48,7 @@ class LevelEditor:
         self.current_type_idx = 0
 
     @staticmethod
-    def create_object(self, typ, x, y):
+    def create_object(typ, x, y):
         # Blöcke
         if typ in Block.BLOCKS_EDITOR_TILE_MAPPING:
             return Block(x, y, typ)

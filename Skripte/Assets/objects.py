@@ -1,6 +1,6 @@
 import pygame
 
-from .objects_class import Object
+from Skripte.Assets.objects_class import Object
 from Skripte.sprites import load_sprite_sheets
 from Skripte.constants import ANIMATION_DELAY
 
@@ -74,10 +74,18 @@ class Checkpoint(Object):
         self.mask = pygame.mask.from_surface(self.image)
 
 
+class Spikes(Object):
+    def __init__(self, x, y, width, height):
+        super().__init__(x, y, width, height, "spikes")
+        self.spike = load_sprite_sheets("Traps", "Spikes", width, height)
+        self.image = self.spike.get("spikes", [pygame.Surface((width, height))])[0]
+        self.mask = pygame.mask.from_surface(self.image)
+
+
 OBJECTS_EDITOR_TILE_MAPPING = {
     "Fire": {"class": Fire, "width": 16, "height": 32, "auto_on": True},
     "Lava": {"class": Lava, "width": 96, "height": 20},
     "Trampoline": {"class": Trampoline, "width": 28, "height": 28},
-    "Checkpoint": {"class": Checkpoint, "width": 64, "height": 64}
+    "Checkpoint": {"class": Checkpoint, "width": 64, "height": 64},
+    "Spikes": {"class": Spikes, "width": 16, "height": 16},
 }
-
