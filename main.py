@@ -1,8 +1,10 @@
 import sys
-import os
+from pathlib import Path
 
-sys.path.insert(0, os.path.abspath("Skripte"))
-from Skripte.game import Game
+project_root = Path(__file__).resolve().parent
+sys.path.insert(0, str(project_root / "Skripte"))
+
+from Skripte import game
 
 if __name__ == "__main__":
-    Game().run()
+    game.Game().run()
