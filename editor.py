@@ -9,9 +9,8 @@ from Skripte import rooms
 WIDTH, HEIGHT = 1000, 750
 FPS = 60
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-MAP_DIR = os.path.dirname(os.path.abspath(__file__))
-
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MAP_DIR = os.path.join(BASE_DIR,"Data","Maps")
 
 class LevelEditor:
     def __init__(self):
