@@ -100,20 +100,40 @@ class Checkbox:
 
 
 def settings_page(screen, events):
-    back_button = Button("Back", 300, 350, 200, 50)
+    # Use static variables to persist state across calls
+    if not hasattr(settings_page, "volume_slider"):
+        settings_page.volume_slider = Slider("Volume", 250, 200, 300, value=70)
+    if not hasattr(settings_page, "fullscreen_checkbox"):
+        settings_page.fullscreen_checkbox = Checkbox(
+            "Fullscreen", 250, 250, checked=False
+        )
+    if not hasattr(settings_page, "back_button"):
+        settings_page.back_button = Button("Back", 300, 350, 200, 50)
+    if not hasattr(settings_page, "fullscreen_state"):
+        settings_page.fullscreen_state = False
+
+    volume_slider = settings_page.volume_slider
+    fullscreen_checkbox = settings_page.fullscreen_checkbox
+    back_button = settings_page.back_button
 
     screen.fill(WHITE)
 
     title = BIG_FONT.render("Settings", True, BLACK)
     screen.blit(title, title.get_rect(center=(400, 120)))
-    volume_slider = Slider("Volume", 250, 200, 300, value=70)
-    fullscreen_checkbox = Checkbox("Fullscreen", 250, 250, checked=False)
     volume_slider.draw(screen)
     fullscreen_checkbox.draw(screen)
-
     back_button.draw(screen)
 
     for event in events:
+        volume_slider.update(event)
+        toggled = fullscreen_checkbox.clicked(event)
+        if toggled:
+            if fullscreen_checkbox.checked:
+                pygame.display.set_mode((800, 600), pygame.FULLSCREEN)
+                settings_page.fullscreen_state = True
+            else:
+                pygame.display.set_mode((800, 600))
+                settings_page.fullscreen_state = False
         if back_button.clicked(event):
             return True  # tells menu to return
 
