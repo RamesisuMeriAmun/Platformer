@@ -52,6 +52,7 @@ class Game:
                 if isinstance(room, Room):
                     if room.check_player_in_room(self.player.rect):
                         self.room = room
+                        self.player.spawn = room.spawn
 
             for obj in self.objects:
                 if hasattr(obj, "loop"):
