@@ -1,6 +1,6 @@
 import pygame
 import sys
-
+from Ui import options
 from Skripte import game
 
 class MainMenu:
@@ -13,11 +13,12 @@ class MainMenu:
         self.font_large = pygame.font.Font(None, 72)
         self.font_medium = pygame.font.Font(None, 48)
         self.running = True
+        self.showing_settings = False
         
         # Button properties
         self.buttons = [
             {"label": "Start", "rect": pygame.Rect(300, 200, 200, 60)},
-            {"label": "Options", "rect": pygame.Rect(300, 300, 200, 60)},
+            {"label": "Settings", "rect": pygame.Rect(300, 300, 200, 60)},
             {"label": "Quit", "rect": pygame.Rect(300, 400, 200, 60)}
         ]
         self.button_color = (100, 100, 100)
@@ -36,12 +37,17 @@ class MainMenu:
             if button["rect"].collidepoint(pos):
                 action = button["label"].lower()
                 if action == "start":
-                    print("Starting game...")
                     game.Game().run()
-                    # Add your game start logic here
-                elif action == "options":
-                    print("Opening options...")
-                    # Add your options logic here
+                elif action == "settings":
+                    self.showing_settings = True
+                    while self.showing_settings:
+                        events = pygame.event.get()
+                        for e in events:
+                            if e.type == pygame.QUIT:
+                                self.running = False
+                                self.showing_settings = False
+                        self.showing_settings = not options.settings_page(self.screen, events)
+                        pygame.display.flip()
                 elif action == "quit":
                     self.running = False
     
@@ -77,6 +83,5 @@ class MainMenu:
 
 
 def main_menu():
-    pygame.init()
     menu = MainMenu()
     menu.run()
