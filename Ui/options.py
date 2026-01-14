@@ -8,7 +8,7 @@ from Ui.Components.button import Button
 
 class SettingsPage:
     def __init__(self):
-        self.volume_slider = Slider("Volume", 250, 200, 300, value=70)
+        self.volume_slider = Slider("Volume", 250, 200, 300, value=67)
         self.fullscreen_checkbox = Checkbox("Fullscreen", 420, 250, checked=False)
         self.back_button = Button("Back", 300, 350, 200, 50)
         self.fullscreen_state = False
@@ -24,7 +24,7 @@ class SettingsPage:
     def handle_events(self, events):
         for event in events:
             self.volume_slider.update(event)
-            toggled = self.fullscreen_checkbox.checked
+            toggled = self.fullscreen_checkbox.clicked(event)
             if toggled:
                 if self.fullscreen_checkbox.checked:
                     pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
