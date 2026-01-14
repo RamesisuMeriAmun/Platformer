@@ -259,14 +259,12 @@ class LevelEditor:
                     if event.key == pygame.K_a: self.movement[0] = True
                     if event.key == pygame.K_d: self.movement[1] = True
                     if event.key == pygame.K_w: self.movement[2] = True
-                    if event.key == pygame.K_s:
+                    if event.key == pygame.K_s: self.movement[3] = True
+                    if event.key == pygame.K_p:
                         if self.room_mode:
                             for room in self.rooms_list:
                                 if pygame.Rect(room["rect"]).collidepoint(world_x, world_y):
                                     room["spawn"] = [world_x, world_y]
-                        else:
-                            self.movement[3] = True
-
                     if event.key == pygame.K_r: self.room_mode = not self.room_mode  # Modus wechseln
                     if event.key == pygame.K_o: self.save_map()
                     if event.key == pygame.K_l: self.load_map()
