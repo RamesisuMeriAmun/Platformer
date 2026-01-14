@@ -1,4 +1,5 @@
 import pygame
+from Skripte.constants import WIDTH, HEIGHT
 
 WHITE = (255, 255, 255)
 GRAY = (200, 200, 200)
@@ -13,7 +14,9 @@ class Button:
         self.rect = pygame.Rect(x, y, w, h)
         self.text = text
 
-    def draw(self, screen):
+    def draw(self, screen, center=None):
+        if center:
+            self.rect.center = center
         pygame.draw.rect(screen, GRAY, self.rect)
         pygame.draw.rect(screen, BLACK, self.rect, 2)
 
@@ -36,7 +39,10 @@ class Slider:
         self.value = value
         self.dragging = False
 
-    def draw(self, screen):
+    def draw(self, screen, center=None):
+        if center:
+            self.rect.center = center
+            self.handle.centery = self.rect.centery
         label_text = FONT.render(self.label, True, BLACK)
         screen.blit(label_text, (self.rect.x, self.rect.y - 30))
 
@@ -65,7 +71,9 @@ class Checkbox:
         self.rect = pygame.Rect(x, y, 20, 20)
         self.checked = checked
 
-    def draw(self, screen):
+    def draw(self, screen, center=None):
+        # if center:
+        #     self.rect.center = center
         label_text = FONT.render(self.label, True, BLACK)
         screen.blit(label_text, (self.rect.x + 30, self.rect.y - 2))
 
@@ -105,7 +113,7 @@ def settings_page(screen, events):
         settings_page.volume_slider = Slider("Volume", 250, 200, 300, value=70)
     if not hasattr(settings_page, "fullscreen_checkbox"):
         settings_page.fullscreen_checkbox = Checkbox(
-            "Fullscreen", 250, 250, checked=False
+            "Fullscreen", 420, 250, checked=False
         )
     if not hasattr(settings_page, "back_button"):
         settings_page.back_button = Button("Back", 300, 350, 200, 50)
@@ -119,20 +127,20 @@ def settings_page(screen, events):
     screen.fill(WHITE)
 
     title = BIG_FONT.render("Settings", True, BLACK)
-    screen.blit(title, title.get_rect(center=(400, 120)))
-    volume_slider.draw(screen)
-    fullscreen_checkbox.draw(screen)
-    back_button.draw(screen)
+    screen.blit(title, title.get_rect(center=(WIDTH // 2, 100)))
+    volume_slider.draw(screen, center=(WIDTH // 2, 200))
+    fullscreen_checkbox.draw(screen, center=(WIDTH // 2, 250))
+    back_button.draw(screen, center=(WIDTH // 2, 350))
 
     for event in events:
         volume_slider.update(event)
         toggled = fullscreen_checkbox.clicked(event)
         if toggled:
             if fullscreen_checkbox.checked:
-                pygame.display.set_mode((800, 600), pygame.FULLSCREEN)
+                pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
                 settings_page.fullscreen_state = True
             else:
-                pygame.display.set_mode((800, 600))
+                pygame.display.set_mode((WIDTH, HEIGHT))
                 settings_page.fullscreen_state = False
         if back_button.clicked(event):
             return True  # tells menu to return

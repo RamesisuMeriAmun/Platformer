@@ -2,10 +2,11 @@ import pygame
 import sys
 from Ui import options
 from Skripte import game
+from Skripte.constants import WIDTH, HEIGHT
 
 
 class MainMenu:
-    def __init__(self, width=800, height=600):
+    def __init__(self, width=WIDTH, height=HEIGHT):
         self.width = width
         self.height = height
         self.screen = pygame.display.set_mode((width, height))
@@ -64,7 +65,18 @@ class MainMenu:
 
         # Draw buttons
         mouse_pos = pygame.mouse.get_pos()
-        for button in self.buttons:
+        button_width = 200
+        button_height = 60
+        button_spacing = 40
+        total_height = (
+            len(self.buttons) * button_height + (len(self.buttons) - 1) * button_spacing
+        )
+        start_y = (self.height - total_height) // 2
+        for i, button in enumerate(self.buttons):
+            x = (self.width - button_width) // 2
+            y = start_y + i * (button_height + button_spacing)
+            button["rect"].x = x
+            button["rect"].y = y
             color = (
                 self.button_hover_color
                 if button["rect"].collidepoint(mouse_pos)
