@@ -1,34 +1,19 @@
 import pygame
 
+ROOM_MAPPING = {
+    "NORMAL": {"color": (0, 255, 0), "id": 0},
+    "BOSS":   {"color": (255, 0, 0), "id": 2},
+    "SECRET": {"color": (255, 255, 0), "id": 3}
+}
+
 
 class Room:
-    COLOR = (100, 150, 255, 50)  # halbtransparent blau
-
-    def __init__(self, x, y, width, height, name=None):
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
-        self.name = name or f"Room_{x}_{y}"
+    def __init__(self, x, y, width, height, room_id, spawn_x, spawn_y):
+        self.room_id = room_id
         self.rect = pygame.Rect(x, y, width, height)
+        self.contains_player = False
+        self.spawn = (spawn_x, spawn_y)
 
-    def draw(self, surface, zoom=1.0, scroll=(0, 0)):
-        s = pygame.Surface((self.width*zoom, self.height*zoom), pygame.SRCALPHA)
-        s.fill(self.COLOR)
-        surface.blit(s, ((self.x - scroll[0])*zoom, (self.y - scroll[1])*zoom))
-        font = pygame.font.SysFont("Arial", int(14*zoom))
-        text = font.render(self.name, True, (255, 255, 255))
-        surface.blit(text, ((self.x - scroll[0])*zoom + 5, (self.y - scroll[1])*zoom + 5))
-
-    @staticmethod
-    def generate_rooms(map_width, map_height, room_width=2000, room_height=1500):
-        rooms = []
-        cols = (map_width + room_width - 1) // room_width
-        rows = (map_height + room_height - 1) // room_height
-
-        for col in range(cols):
-            for row in range(rows):
-                x = col * room_width
-                y = row * room_height
-                rooms.append(Room(x, y, room_width, room_height, f"Room_{col}_{row}"))
-        return rooms
+    def check_player_in_room(self, player):
+        self.contains_player = self.rect.colliderect(player)
+        return self.contains_player

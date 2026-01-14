@@ -4,6 +4,7 @@ import pygame
 import Skripte.constants as constants
 from Skripte.Assets import background
 from Skripte import player, level
+from Skripte.rooms import Room
 
 
 class Game:
@@ -21,6 +22,8 @@ class Game:
 
         self.player = player.Player(100, 100, 40, 50, self.objects)
 
+        self.room = None
+
     def draw(self):
         # Background
         for tile in self.background:
@@ -28,7 +31,8 @@ class Game:
 
         # Objekte
         for obj in self.objects:
-            obj.draw(self.screen, 0, 0)
+            if not isinstance(obj, Room):
+                obj.draw(self.screen, 0, 0)
 
         # Player
         self.player.draw(self.screen)
@@ -43,7 +47,14 @@ class Game:
                     sys.exit()
 
             self.player.loop()
+
+            for room in self.objects:
+                if isinstance(room, Room):
+                    if room.check_player_in_room(self.player.rect):
+                        self.room = room
+
             for obj in self.objects:
                 if hasattr(obj, "loop"):
                     obj.loop()
+
             self.draw()

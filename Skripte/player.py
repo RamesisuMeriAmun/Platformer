@@ -1,6 +1,7 @@
 import pygame
 from Skripte import constants, sprites
 from Skripte.Assets.blocks import Block
+from Skripte.rooms import Room
 
 
 class Player(pygame.sprite.Sprite):
@@ -48,7 +49,8 @@ class Player(pygame.sprite.Sprite):
 
         # Kollision
         self.blocks = [obj for obj in all_objects if isinstance(obj, Block)]
-        self.objects = [obj for obj in all_objects if not isinstance(obj, Block)]
+        self.rooms = [obj for obj in all_objects if isinstance(obj, Room)]
+        self.objects = [obj for obj in all_objects if not isinstance(obj, Block) and not isinstance(obj, Room)]
 
         self.hit = False
 
