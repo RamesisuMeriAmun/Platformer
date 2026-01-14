@@ -1,6 +1,5 @@
 import pygame
-import constants
-import sprites
+from Skripte import constants, sprites
 from Skripte.Assets.blocks import Block
 
 
