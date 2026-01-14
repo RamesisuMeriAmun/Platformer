@@ -1,10 +1,9 @@
 import sys
 import pygame
 
-import constants
-from Assets import background
-import player
-import level
+import Skripte.constants as constants
+from Skripte.Assets import background
+from Skripte import player, level
 
 
 class Game:

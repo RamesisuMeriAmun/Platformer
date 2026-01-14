@@ -1,6 +1,6 @@
 import pygame
 from os.path import join
-import constants
+import Skripte.constants as constants
 
 
 def load_background(name):
