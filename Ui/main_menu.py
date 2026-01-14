@@ -41,17 +41,10 @@ class MainMenu:
                 if action == "start":
                     game.Game().run()
                 elif action == "settings":
-                    self.showing_settings = True
-                    while self.showing_settings:
-                        events = pygame.event.get()
-                        for e in events:
-                            if e.type == pygame.QUIT:
-                                self.running = False
-                                self.showing_settings = False
-                        self.showing_settings = not options.settings_page(
-                            self.screen, events
-                        )
-                        pygame.display.flip()
+                    settings_page = options.SettingsPage()
+                    settings = settings_page.run()
+                    if settings:
+                        print("Einstellungen gespeichert:", settings)
                 elif action == "quit":
                     self.running = False
 
