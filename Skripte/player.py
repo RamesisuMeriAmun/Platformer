@@ -159,6 +159,7 @@ class Player(pygame.sprite.Sprite):
             self.dashing = True
             self.dash_timer = self.dash_duration
             self.last_dash_time = current_time
+            self.can_dash = False
 
     # Collision
     def handle_vertical_collision(self, blocks, dy):
@@ -174,6 +175,7 @@ class Player(pygame.sprite.Sprite):
     def landed(self):
         self.y_vel = 0
         self.falling_time = 0
+        self.can_dash = True
         # Den Rest erledigt check_grounded in jedem Frame
 
     def hit_head(self):
@@ -189,10 +191,12 @@ class Player(pygame.sprite.Sprite):
                     self.rect.right = block.rect.left
                     self.is_on_wall = True
                     self.wall_direction = 1
+                    self.can_dash = True
                 elif self.x_vel < 0:
                     self.rect.left = block.rect.right
                     self.is_on_wall = True
                     self.wall_direction = -1
+                    self.can_dash = True
 
     def handle_object_collision(self, objects):
         for obj in objects:
