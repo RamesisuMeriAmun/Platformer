@@ -10,7 +10,33 @@
         "8;5": "Braune Erde",
         "7;4": "Braune Erde",
         "7;3": "Braune Erde",
-        "4;2": "Braune Erde"
+        "4;2": "Braune Erde",
+        "10;4": "Braune Erde",
+        "14;3": "Braune Erde",
+        "13;2": "Braune Erde",
+        "13;3": "Braune Erde",
+        "12;3": "Braune Erde",
+        "16;1": "Braune Erde",
+        "17;1": "Braune Erde",
+        "18;1": "Braune Erde",
+        "19;1": "Braune Erde",
+        "20;-2": "Braune Erde",
+        "18;-4": "Braune Erde",
+        "17;-4": "Braune Erde",
+        "16;-4": "Braune Erde",
+        "15;-4": "Braune Erde",
+        "13;-5": "Braune Erde",
+        "12;-5": "Braune Erde",
+        "11;-5": "Braune Erde",
+        "10;-6": "Braune Erde",
+        "8;-7": "Braune Erde",
+        "6;-7": "Braune Erde",
+        "24;-1": "Braune Erde",
+        "25;-1": "Braune Erde",
+        "26;-1": "Braune Erde",
+        "27;0": "Braune Erde",
+        "28;0": "Braune Erde",
+        "22;-1": "Braune Erde"
     },
     "offgrid": [
         {
@@ -38,28 +64,54 @@
     "rooms": [
         {
             "rect": [
-                96.0,
                 0.0,
-                768.0,
-                576.0
+                -288.0,
+                1632.0,
+                1152.0
             ],
             "type": "NORMAL",
             "spawn": [
-                235.0,
-                427.5
+                241.0,
+                457.0
             ]
         },
         {
             "rect": [
-                864.0,
-                0.0,
-                288.0,
-                576.0
+                -192.0,
+                -1344.0,
+                1824.0,
+                1056.0
             ],
-            "type": "BOSS",
+            "type": "NORMAL",
             "spawn": [
-                902.0,
-                333.0
+                1579.9999999999995,
+                -417.5000000000002
+            ]
+        },
+        {
+            "rect": [
+                1632.0,
+                -576.0,
+                672.0,
+                768.0
+            ],
+            "type": "NORMAL",
+            "spawn": [
+                1680.0,
+                -528.0
+            ]
+        },
+        {
+            "rect": [
+                2304.0,
+                -192.0,
+                1728.0,
+                288.0
+            ],
+            "type": "NORMAL",
+            "spawn": [
+                2352.0,
+                -144.0
             ]
         }
     ]

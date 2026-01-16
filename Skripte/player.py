@@ -274,5 +274,10 @@ class Player(pygame.sprite.Sprite):
 
         self.update_sprite()
 
-    def draw(self, screen):
-        screen.blit(self.sprite, self.sprite.get_rect(midbottom=self.rect.midbottom))
+    # In der Player Klasse anpassen:
+    def draw(self, screen, offset_x=0, offset_y=0):
+        # Wir berechnen das Rect mit dem Kamera-Offset
+        # midbottom sorgt dafür, dass der Spieler fest auf dem Boden steht
+        draw_pos = self.sprite.get_rect(midbottom=(self.rect.midbottom[0] - int(offset_x),
+                                                   self.rect.midbottom[1] - int(offset_y)))
+        screen.blit(self.sprite, draw_pos)
