@@ -73,11 +73,31 @@ class LevelEditor:
         return None
 
     def save_map(self):
-        data = {
-            "grid": self.tilemap,
-            "offgrid": self.offgrid_tiles,
-            "rooms": self.rooms_list,
-        }
+        new_rooms_data = []
+
+        for room in self.rooms_list:
+            r_rect = pygame.Rect(room["rect"])
+            room_content = {
+                "rect": room["rect"],
+                "type": room["type"],
+                "spawn": room["spawn"],
+                "grid": {},
+                "offgrid": []
+            }
+
+            for loc, t_type in self.tilemap.items():
+                coords = list(map(int, loc.split(";")))
+                if r_rect.collidepoint(coords[0] * BLOCK_SIZE, coords[1] * BLOCK_SIZE):
+                    room_content["grid"][loc] = t_type
+
+            for tile in self.offgrid_tiles:
+                if r_rect.collidepoint(tile["pos"]):
+                    room_content["offgrid"].append(tile)
+
+            new_rooms_data.append(room_content)
+
+        data = {"rooms": new_rooms_data}
+
         os.makedirs(MAP_DIR, exist_ok=True)
         path = os.path.join(MAP_DIR, "map.json")
         with open(path, "w") as f:
@@ -86,15 +106,30 @@ class LevelEditor:
 
     def load_map(self):
         path = os.path.join(MAP_DIR, "map.json")
-        if os.path.exists(path):
-            with open(path, "r") as f:
-                data = json.load(f)
-                self.tilemap = data.get("grid", {})
-                self.offgrid_tiles = data.get("offgrid", [])
-                self.rooms_list = data.get("rooms", [])
-            print(f"Level geladen: {path}")
-        else:
-            print("Keine Map gefunden!")
+        if not os.path.exists(path):
+            print("Keine Map-Datei gefunden.")
+            return
+
+        with open(path, "r") as f:
+            data = json.load(f)
+
+        self.tilemap = {}
+        self.offgrid_tiles = []
+        self.rooms_list = []
+
+        for r_data in data.get("rooms", []):
+            self.rooms_list.append({
+                "rect": r_data["rect"],
+                "type": r_data["type"],
+                "spawn": r_data["spawn"]
+            })
+
+            for loc, t_type in r_data.get("grid", {}).items():
+                self.tilemap[loc] = t_type
+
+            for item in r_data.get("offgrid", []):
+                self.offgrid_tiles.append(item)
+
 
     def run(self):
         run = True
@@ -240,7 +275,7 @@ class LevelEditor:
             # Zeile 1
             mode_str = "RAUM (STRG+L-Click)" if self.room_mode else "TILES"
             info_line1 = self.font.render(
-                f"MODUS: {mode_str} | Auswahl: {current_selection} | [R] Wechseln | [S] Set Spawn",
+                f"MODUS: {mode_str} | Auswahl: {current_selection} | [R] Wechseln | [P] Set Spawn",
                 True,
                 (255, 255, 255),
             )
@@ -313,19 +348,29 @@ class LevelEditor:
                         new_x = min(x1, x2)
                         new_y = min(y1, y2)
 
-                        new_w = max(BLOCK_SIZE, abs(x1 - x2))
-                        new_h = max(BLOCK_SIZE, abs(y1 - y2))
+                        final_w = max(WIDTH, abs(x1 - x2))
+                        final_h = max(HEIGHT, abs(y1 - y2))
 
-                        self.rooms_list.append(
-                            {
-                                "rect": [new_x, new_y, new_w, new_h],
-                                "type": self.room_types[self.current_room_idx],
-                                "spawn": [
-                                    new_x + BLOCK_SIZE // 2,
-                                    new_y + BLOCK_SIZE // 2,
-                                ],
-                            }
-                        )
+                        new_room_rect = pygame.Rect(new_x, new_y, final_w, final_h)
+                        overlap = False
+
+                        for room in self.rooms_list:
+                            existing_rect = pygame.Rect(room["rect"])
+                            if new_room_rect.colliderect(existing_rect):
+                                overlap = True
+                                break
+
+                        if not overlap:
+                            self.rooms_list.append(
+                                {
+                                    "rect": [new_x, new_y, final_w, final_h],
+                                    "type": self.room_types[self.current_room_idx],
+                                    "spawn": [
+                                        new_x + BLOCK_SIZE // 2,
+                                        new_y + BLOCK_SIZE // 2,
+                                    ],
+                                }
+                            )
 
                         self.room_start_pos = None
 
@@ -340,12 +385,6 @@ class LevelEditor:
                         )
 
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_a:
-                        self.movement[0] = True
-                    if event.key == pygame.K_d:
-                        self.movement[1] = True
-                    if event.key == pygame.K_w:
-                        self.movement[2] = True
                     if event.key == pygame.K_a:
                         self.movement[0] = True
                     if event.key == pygame.K_d:
@@ -377,18 +416,6 @@ class LevelEditor:
                         or event.key == pygame.K_KP_PLUS
                         or event.key == pygame.K_EQUALS
                     ):
-                        self.zoom = min(2.0, self.zoom + 0.1)
-                    if event.key == pygame.K_MINUS or event.key == pygame.K_KP_MINUS:
-                        self.zoom = max(0.2, self.zoom - 0.1)
-                    if event.key == pygame.K_r:
-                        self.room_mode = not self.room_mode  # Modus wechseln
-                    if event.key == pygame.K_o:
-                        self.save_map()
-                    if event.key == pygame.K_l:
-                        self.load_map()
-                    if event.key == pygame.K_g:
-                        self.ongrid = not self.ongrid
-                    if event.key == pygame.K_PLUS or event.key == pygame.K_KP_PLUS:
                         self.zoom = min(2.0, self.zoom + 0.1)
                     if event.key == pygame.K_MINUS or event.key == pygame.K_KP_MINUS:
                         self.zoom = max(0.2, self.zoom - 0.1)

@@ -48,9 +48,8 @@ class Player(pygame.sprite.Sprite):
         self.last_dash_time = 0
 
         # Kollision
-        self.blocks = [obj for obj in all_objects if isinstance(obj, Block)]
-        self.rooms = [obj for obj in all_objects if isinstance(obj, Room)]
-        self.objects = [obj for obj in all_objects if not isinstance(obj, Block) and not isinstance(obj, Room)]
+        self.blocks = []
+        self.objects = []
 
         self.hit = False
 
@@ -162,6 +161,10 @@ class Player(pygame.sprite.Sprite):
             self.can_dash = False
 
     # Collision
+    def set_active_collision(self, blocks, objects):
+        self.blocks = blocks
+        self.objects = objects
+
     def handle_vertical_collision(self, blocks, dy):
         for block in blocks:
             if self.rect.colliderect(block.rect):
@@ -176,7 +179,6 @@ class Player(pygame.sprite.Sprite):
         self.y_vel = 0
         self.falling_time = 0
         self.can_dash = True
-        # Den Rest erledigt check_grounded in jedem Frame
 
     def hit_head(self):
         self.y_vel = 1

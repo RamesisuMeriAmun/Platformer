@@ -1,118 +1,133 @@
 {
-    "grid": {
-        "1;5": "Braune Erde",
-        "2;5": "Braune Erde",
-        "3;5": "Braune Erde",
-        "4;5": "Braune Erde",
-        "6;5": "Braune Erde",
-        "7;5": "Braune Erde",
-        "5;5": "Braune Erde",
-        "8;5": "Braune Erde",
-        "7;4": "Braune Erde",
-        "7;3": "Braune Erde",
-        "4;2": "Braune Erde",
-        "10;4": "Braune Erde",
-        "14;3": "Braune Erde",
-        "13;2": "Braune Erde",
-        "13;3": "Braune Erde",
-        "12;3": "Braune Erde",
-        "16;1": "Braune Erde",
-        "17;1": "Braune Erde",
-        "18;1": "Braune Erde",
-        "19;1": "Braune Erde",
-        "20;-2": "Braune Erde",
-        "18;-4": "Braune Erde",
-        "17;-4": "Braune Erde",
-        "16;-4": "Braune Erde",
-        "15;-4": "Braune Erde",
-        "13;-5": "Braune Erde",
-        "12;-5": "Braune Erde",
-        "11;-5": "Braune Erde",
-        "10;-6": "Braune Erde",
-        "8;-7": "Braune Erde",
-        "6;-7": "Braune Erde",
-        "24;-1": "Braune Erde",
-        "25;-1": "Braune Erde",
-        "26;-1": "Braune Erde",
-        "27;0": "Braune Erde",
-        "28;0": "Braune Erde",
-        "22;-1": "Braune Erde"
-    },
-    "offgrid": [
-        {
-            "type": "Fire",
-            "pos": [
-                503.0,
-                418.0
-            ]
-        },
-        {
-            "type": "Trampoline",
-            "pos": [
-                402.0,
-                426.0
-            ]
-        },
-        {
-            "type": "Spikes",
-            "pos": [
-                130.0,
-                450.0
-            ]
-        }
-    ],
     "rooms": [
         {
             "rect": [
                 0.0,
-                -288.0,
-                1632.0,
-                1152.0
+                -96.0,
+                1248.0,
+                750
             ],
             "type": "NORMAL",
             "spawn": [
-                241.0,
-                457.0
+                244.99999999999955,
+                454.9999999999984
+            ],
+            "grid": {
+                "1;5": "Braune Erde",
+                "2;5": "Braune Erde",
+                "3;5": "Braune Erde",
+                "4;5": "Braune Erde",
+                "6;5": "Braune Erde",
+                "7;5": "Braune Erde",
+                "5;5": "Braune Erde",
+                "8;5": "Braune Erde",
+                "7;4": "Braune Erde",
+                "7;3": "Braune Erde",
+                "4;2": "Braune Erde",
+                "10;4": "Braune Erde",
+                "12;3": "Braune Erde"
+            },
+            "offgrid": [
+                {
+                    "type": "Fire",
+                    "pos": [
+                        503.0,
+                        418.0
+                    ]
+                },
+                {
+                    "type": "Trampoline",
+                    "pos": [
+                        402.0,
+                        426.0
+                    ]
+                },
+                {
+                    "type": "Spikes",
+                    "pos": [
+                        130.0,
+                        450.0
+                    ]
+                }
             ]
         },
         {
             "rect": [
-                -192.0,
-                -1344.0,
-                1824.0,
-                1056.0
-            ],
-            "type": "NORMAL",
-            "spawn": [
-                1579.9999999999995,
-                -417.5000000000002
-            ]
-        },
-        {
-            "rect": [
-                1632.0,
+                1248.0,
                 -576.0,
-                672.0,
+                2016.0,
+                960.0
+            ],
+            "type": "NORMAL",
+            "spawn": [
+                1296.0,
+                -528.0
+            ],
+            "grid": {
+                "14;3": "Braune Erde",
+                "13;3": "Braune Erde",
+                "16;1": "Braune Erde",
+                "17;1": "Braune Erde",
+                "18;1": "Braune Erde",
+                "19;1": "Braune Erde",
+                "20;-2": "Braune Erde",
+                "18;-4": "Braune Erde",
+                "17;-4": "Braune Erde",
+                "16;-4": "Braune Erde",
+                "15;-4": "Braune Erde",
+                "13;-5": "Braune Erde",
+                "24;-1": "Braune Erde",
+                "25;-1": "Braune Erde",
+                "26;-1": "Braune Erde",
+                "27;0": "Braune Erde",
+                "28;0": "Braune Erde",
+                "22;-1": "Braune Erde",
+                "21;1": "Braune Erde"
+            },
+            "offgrid": []
+        },
+        {
+            "rect": [
+                96.0,
+                -960.0,
+                1152.0,
+                864.0
+            ],
+            "type": "NORMAL",
+            "spawn": [
+                144.0,
+                -912.0
+            ],
+            "grid": {
+                "12;-5": "Braune Erde",
+                "11;-5": "Braune Erde",
+                "10;-6": "Braune Erde",
+                "8;-7": "Braune Erde",
+                "8;-9": "Braune Erde",
+                "10;-9": "Braune Erde",
+                "11;-9": "Braune Erde",
+                "12;-9": "Braune Erde"
+            },
+            "offgrid": []
+        },
+        {
+            "rect": [
+                1248.0,
+                -1344.0,
+                1920.0,
                 768.0
             ],
             "type": "NORMAL",
             "spawn": [
-                1680.0,
-                -528.0
-            ]
-        },
-        {
-            "rect": [
-                2304.0,
-                -192.0,
-                1728.0,
-                288.0
+                1296.0,
+                -1296.0
             ],
-            "type": "NORMAL",
-            "spawn": [
-                2352.0,
-                -144.0
-            ]
+            "grid": {
+                "13;-9": "Braune Erde",
+                "14;-9": "Braune Erde",
+                "15;-9": "Braune Erde"
+            },
+            "offgrid": []
         }
     ]
 }
