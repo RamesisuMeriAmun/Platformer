@@ -1,5 +1,3 @@
-import pygame
-
 # Game
 WIDTH = 1000
 HEIGHT = 750
@@ -18,5 +16,3 @@ BLOCK_SIZE = 96
 WHITE = (255, 255, 255)
 GRAY = (200, 200, 200)
 BLACK = (0, 0, 0)
-FONT = pygame.font.SysFont(None, 36)
-BIG_FONT = pygame.font.SysFont(None, 56)

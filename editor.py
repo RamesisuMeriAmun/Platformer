@@ -346,11 +346,14 @@ class LevelEditor:
                         self.movement[1] = True
                     if event.key == pygame.K_w:
                         self.movement[2] = True
+                    if event.key == pygame.K_a:
+                        self.movement[0] = True
+                    if event.key == pygame.K_d:
+                        self.movement[1] = True
+                    if event.key == pygame.K_w:
+                        self.movement[2] = True
                     if event.key == pygame.K_s:
-                    if event.key == pygame.K_a: self.movement[0] = True
-                    if event.key == pygame.K_d: self.movement[1] = True
-                    if event.key == pygame.K_w: self.movement[2] = True
-                    if event.key == pygame.K_s: self.movement[3] = True
+                        self.movement[3] = True
                     if event.key == pygame.K_p:
                         if self.room_mode:
                             for room in self.rooms_list:
@@ -377,14 +380,18 @@ class LevelEditor:
                         self.zoom = min(2.0, self.zoom + 0.1)
                     if event.key == pygame.K_MINUS or event.key == pygame.K_KP_MINUS:
                         self.zoom = max(0.2, self.zoom - 0.1)
-                    if event.key == pygame.K_r: self.room_mode = not self.room_mode  # Modus wechseln
-                    if event.key == pygame.K_o: self.save_map()
-                    if event.key == pygame.K_l: self.load_map()
-                    if event.key == pygame.K_g: self.ongrid = not self.ongrid
-                    if event.key == pygame.K_PLUS or event.key == pygame.K_KP_PLUS: self.zoom = min(2.0,
-                                                                                                    self.zoom + 0.1)
-                    if event.key == pygame.K_MINUS or event.key == pygame.K_KP_MINUS: self.zoom = max(0.2,
-                                                                                                      self.zoom - 0.1)
+                    if event.key == pygame.K_r:
+                        self.room_mode = not self.room_mode  # Modus wechseln
+                    if event.key == pygame.K_o:
+                        self.save_map()
+                    if event.key == pygame.K_l:
+                        self.load_map()
+                    if event.key == pygame.K_g:
+                        self.ongrid = not self.ongrid
+                    if event.key == pygame.K_PLUS or event.key == pygame.K_KP_PLUS:
+                        self.zoom = min(2.0, self.zoom + 0.1)
+                    if event.key == pygame.K_MINUS or event.key == pygame.K_KP_MINUS:
+                        self.zoom = max(0.2, self.zoom - 0.1)
 
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_a:

@@ -1,5 +1,7 @@
 import pygame
-from Skripte.constants import BLACK, GRAY, FONT
+from Skripte.constants import BLACK, GRAY
+
+FONT = pygame.font.SysFont(None, 36)
 
 
 class Slider:

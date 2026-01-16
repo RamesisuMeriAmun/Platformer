@@ -32,7 +32,9 @@ class Game:
 
         self.current_bg_name = "Gray.png"
 
-        self.background, self.bg_image = background.load_background(self.current_bg_name, constants.WIDTH, constants.HEIGHT)
+        self.background, self.bg_image = background.load_background(
+            self.current_bg_name, constants.WIDTH, constants.HEIGHT
+        )
 
         self.objects = level.load_level("map.json")
 
@@ -87,9 +89,7 @@ class Game:
                             self.room = room
                             self.player.spawn = room.spawn
                             self.background, _ = background.load_background(
-                                self.current_bg_name,
-                                room.rect.width,
-                                room.rect.height
+                                self.current_bg_name, room.rect.width, room.rect.height
                             )
 
             for obj in self.objects:

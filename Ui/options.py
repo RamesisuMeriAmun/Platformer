@@ -1,13 +1,16 @@
 import sys
 import pygame
-from Skripte.constants import WIDTH, HEIGHT, WHITE, BLACK, BIG_FONT
+from Skripte.constants import WIDTH, HEIGHT, WHITE, BLACK
 from Ui.Components.slider import Slider
 from Ui.Components.check_box import Checkbox
 from Ui.Components.button import Button
 
+BIG_FONT = pygame.font.SysFont(None, 56)
+
 
 class SettingsPage:
     def __init__(self):
+
         self.volume_slider = Slider("Volume", 250, 200, 300, value=67)
         self.fullscreen_checkbox = Checkbox("Fullscreen", 420, 250, checked=False)
         self.back_button = Button("Back", 300, 350, 200, 50)
