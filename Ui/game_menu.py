@@ -2,15 +2,16 @@ import pygame
 import sys
 from Ui import options
 from Skripte import game
+
 from Skripte.constants import WIDTH, HEIGHT
 
 
-class MainMenu:
+class GameMenu:
     def __init__(self, width=WIDTH, height=HEIGHT):
         self.width = width
         self.height = height
         self.screen = pygame.display.set_mode((width, height))
-        pygame.display.set_caption("Main Menu")
+        pygame.display.set_caption("Game Menu")
         self.clock = pygame.time.Clock()
         self.font_large = pygame.font.Font(None, 72)
         self.font_medium = pygame.font.Font(None, 48)
@@ -18,10 +19,41 @@ class MainMenu:
         self.showing_settings = False
 
         # Button properties
+        button_width = 300
+        button_height = 60
+        button_spacing = 40
+        num_buttons = 3
+        total_height = num_buttons * button_height + (num_buttons - 1) * button_spacing
+        start_y = (self.height - total_height) // 2
+        x = (self.width - button_width) // 2
         self.buttons = [
-            {"label": "Start", "rect": pygame.Rect(300, 200, 200, 60)},
-            {"label": "Settings", "rect": pygame.Rect(300, 300, 200, 60)},
-            {"label": "Quit", "rect": pygame.Rect(300, 400, 200, 60)},
+            {
+                "label": "Return to Game",
+                "rect": pygame.Rect(
+                    x,
+                    start_y + 0 * (button_height + button_spacing),
+                    button_width,
+                    button_height,
+                ),
+            },
+            {
+                "label": "Back to Menu",
+                "rect": pygame.Rect(
+                    x,
+                    start_y + 1 * (button_height + button_spacing),
+                    button_width,
+                    button_height,
+                ),
+            },
+            {
+                "label": "Settings",
+                "rect": pygame.Rect(
+                    x,
+                    start_y + 2 * (button_height + button_spacing),
+                    button_width,
+                    button_height,
+                ),
+            },
         ]
         self.button_color = (100, 100, 100)
         self.button_hover_color = (150, 150, 150)
@@ -38,8 +70,12 @@ class MainMenu:
         for button in self.buttons:
             if button["rect"].collidepoint(pos):
                 action = button["label"].lower()
-                if action == "start":
+                if action == "return to game":
                     game.Game().run()
+                elif action == "back to menu":
+                    from Ui.main_menu import MainMenu
+
+                    MainMenu().run()
                 elif action == "settings":
                     settings_page = options.SettingsPage()
                     settings = settings_page.run()
@@ -58,18 +94,7 @@ class MainMenu:
 
         # Draw buttons
         mouse_pos = pygame.mouse.get_pos()
-        button_width = 200
-        button_height = 60
-        button_spacing = 40
-        total_height = (
-            len(self.buttons) * button_height + (len(self.buttons) - 1) * button_spacing
-        )
-        start_y = (self.height - total_height) // 2
-        for i, button in enumerate(self.buttons):
-            x = (self.width - button_width) // 2
-            y = start_y + i * (button_height + button_spacing)
-            button["rect"].x = x
-            button["rect"].y = y
+        for button in self.buttons:
             color = (
                 self.button_hover_color
                 if button["rect"].collidepoint(mouse_pos)
@@ -96,6 +121,6 @@ class MainMenu:
         sys.exit()
 
 
-def main_menu():
-    menu = MainMenu()
+def game_menu():
+    menu = GameMenu()
     menu.run()
