@@ -4,6 +4,7 @@ import pygame
 WIDTH = 1000
 HEIGHT = 750
 FPS = 60
+BACKGROUND_COLOR = (0, 0, 0)
 
 # Player
 VEL = 5
