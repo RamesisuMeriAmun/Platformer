@@ -17,6 +17,7 @@ class Game:
         settings_page = options.SettingsPage()
         settings = settings_page.get_settings()
         if settings and settings.get("fullscreen", False):
+            print("Starte Spiel im Vollbildmodus")
             self.screen = pygame.display.set_mode(
                 (constants.WIDTH, constants.HEIGHT), pygame.FULLSCREEN
             )

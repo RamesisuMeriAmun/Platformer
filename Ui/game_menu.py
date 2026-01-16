@@ -37,7 +37,7 @@ class GameMenu:
                 ),
             },
             {
-                "label": "Back to Menu",
+                "label": "Settings",
                 "rect": pygame.Rect(
                     x,
                     start_y + 1 * (button_height + button_spacing),
@@ -46,7 +46,7 @@ class GameMenu:
                 ),
             },
             {
-                "label": "Settings",
+                "label": "Back to Menu",
                 "rect": pygame.Rect(
                     x,
                     start_y + 2 * (button_height + button_spacing),
