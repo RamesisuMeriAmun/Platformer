@@ -2,7 +2,6 @@ import pygame
 
 
 class Camera:
-
     def __init__(self, width, height):
         self.width = width
         self.height = height
@@ -21,7 +20,6 @@ class Camera:
         )
 
     def update(self, player, room):
-
         if hasattr(player, "direction"):
             target_bias = -150 if player.direction == "right" else 150
             self.horizontal_bias += (target_bias - self.horizontal_bias) * 0.01
