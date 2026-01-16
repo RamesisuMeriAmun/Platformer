@@ -21,7 +21,7 @@ class Fire(Object):
         self.image = self.fire.get("off", [pygame.Surface((width, height))])[0]
         self.mask = pygame.mask.from_surface(self.image)
         self.animation_count = 0
-        self.animation_name = "off"
+        self.animation_name = "on"
 
     def on(self):
         self.animation_name = "on"
