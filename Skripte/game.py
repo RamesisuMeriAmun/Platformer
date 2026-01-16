@@ -6,6 +6,7 @@ from Skripte.Assets import background
 from Skripte import player, level
 from Skripte.rooms import Room
 import Ui.options as options
+import Ui.game_menu as game_menu
 
 
 class Game:
@@ -46,6 +47,12 @@ class Game:
         self.player.draw(self.screen)
         pygame.display.update()
 
+    def open_game_menu(self):
+        # Placeholder for game menu logic
+        print("Game menu opened")
+        game_menu.GameMenu().run()
+        # You can replace this with actual menu logic
+
     def run(self):
         while True:
             self.clock.tick(constants.FPS)
@@ -53,6 +60,9 @@ class Game:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        self.open_game_menu()
 
             self.player.loop()
 
