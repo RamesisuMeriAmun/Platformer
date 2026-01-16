@@ -41,10 +41,8 @@ class Game:
     def draw(self):
 
         self.screen.fill(constants.BACKGROUND_COLOR)
-        # Kamera-Position basierend auf Spieler und aktuellem Raum aktualisieren
         self.camera.update(self.player, self.room)
 
-        # Offsets für die draw-Aufrufe zwischenspeichern
         ox = int(self.camera.offset.x)
         oy = int(self.camera.offset.y)
 
@@ -68,7 +66,6 @@ class Game:
         # Placeholder for game menu logic
         print("Game menu opened")
         game_menu.GameMenu().run()
-        # You can replace this with actual menu logic
 
     def run(self):
         while True:
@@ -89,7 +86,6 @@ class Game:
                         if self.room != room:
                             self.room = room
                             self.player.spawn = room.spawn
-                            # HIER: Hintergrund für die Größe des neuen Raums neu generieren
                             self.background, _ = background.load_background(
                                 self.current_bg_name,
                                 room.rect.width,
