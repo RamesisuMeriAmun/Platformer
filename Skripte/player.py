@@ -1,5 +1,6 @@
 import pygame
 from Skripte import constants, sprites
+from Skripte.attackhandler import Attackhandler  # NEU: Import des externen Handlers
 
 
 class Player(pygame.sprite.Sprite):
@@ -33,7 +34,7 @@ class Player(pygame.sprite.Sprite):
         self.wall_jump_force_x = 5
         self.wall_jump_force_y = 7
         self.is_on_wall = False
-        self.wall_direction = 0 # -1 = left, 1 = right
+        self.wall_direction = 0  # -1 = left, 1 = right
         self.wall_jump_timer = 0
 
         # Dash
@@ -45,16 +46,9 @@ class Player(pygame.sprite.Sprite):
         self.dash_cooldown = 700
         self.last_dash_time = 0
 
-        # Pogo
-        self.pogo = False
+        # Pogo / Combat
+        self.combat = Attackhandler(self)
         self.is_pogoing = False
-        self.pogo_width = self.rect.width * 1.5
-        self.pogo_height = 10
-        self.pogo_trigger = pygame.Rect(0, 0, self.pogo_width, self.pogo_height)
-        self.pogo_active_timer = 0
-        self.pogo_duration = 10
-        self.pogo_cooldown = 0
-        self.pogo_cooldown_max = 40
 
         # Kollision
         self.blocks = []
@@ -89,11 +83,16 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_LSHIFT]:
             self.dash()
 
-        if not self.on_ground and keys[pygame.K_s] and mouse[0]:
-            if self.pogo_cooldown <= 0 and self.pogo_active_timer <= 0:
-                self.pogo = True
-                self.pogo_active_timer = self.pogo_duration
-                self.pogo_cooldown = self.pogo_cooldown_max
+        # Angriff
+        if mouse[0]:
+            if keys[pygame.K_s]:
+                self.combat.trigger("down")
+            elif keys[pygame.K_w]:
+                self.combat.trigger("up")
+            elif self.direction == "left":
+                self.combat.trigger("left")
+            else:
+                self.combat.trigger("right")
 
     def move(self, dx, dy):
         self.rect.x += dx
@@ -136,7 +135,7 @@ class Player(pygame.sprite.Sprite):
                     keys[pygame.K_SPACE]
                     and self.y_vel < 0
                     and self.jump_hold_time < self.MAX_JUMP_HOLD
-                    and self.jump_count == 0
+                    and self.jump_count == 0  # Korrektur: Muss jump_count 1 sein beim Halten
             ):
                 self.y_vel -= self.JUMP_HOLD_FORCE
                 self.jump_hold_time += 1
@@ -176,20 +175,6 @@ class Player(pygame.sprite.Sprite):
             self.last_dash_time = current_time
             self.can_dash = False
 
-    # Pogo
-    def check_pogo(self):
-        self.pogo_trigger.centerx = self.rect.centerx
-        self.pogo_trigger.top = self.rect.bottom + 5
-        pogo_targets = ["spikes"]
-        if self.y_vel > 0 and self.pogo:
-
-            for obj in self.objects:
-                if self.pogo_trigger.colliderect(obj.rect):
-                    if obj.name in pogo_targets:
-                        self.execute_pogo_bounce()
-                        return True
-        return False
-
     def execute_pogo_bounce(self):
         self.y_vel = -self.JUMP_FORCE * 0.8
         self.is_pogoing = True
@@ -198,7 +183,7 @@ class Player(pygame.sprite.Sprite):
         self.jump_count = 1
         self.can_dash = True
 
-    # Collision
+    # Kollision
     def set_active_collision(self, blocks, objects):
         self.blocks = blocks
         self.objects = objects
@@ -257,10 +242,11 @@ class Player(pygame.sprite.Sprite):
             self.rect.topleft = self.spawn
             self.x_vel = 0
             self.y_vel = 0
-            self.dashing = False  # WICHTIG: Dash sofort stoppen
-            self.dash_timer = 0  # Timer zurücksetzen
-            self.wall_jump_timer = 0  # Walljump-Momentum stoppen
+            self.dashing = False
+            self.dash_timer = 0
+            self.wall_jump_timer = 0
             self.animation_count = 0
+            self.is_alive = True
 
     # Display
     def update_sprite(self):
@@ -273,12 +259,13 @@ class Player(pygame.sprite.Sprite):
             sprite_sheet = "wall_jump"
         elif self.y_vel < 0:
             sprite_sheet = "jump" if self.jump_count == 1 else "double_jump"
-        elif self.y_vel > constants.GRAVITY + 1 and self.jump_count > 0:
+        elif self.y_vel > constants.GRAVITY + 1:
             sprite_sheet = "fall"
         elif self.x_vel != 0:
             sprite_sheet = "run"
-        elif self.pogo:
-            sprite_sheet = "fall"  # hat noch keinen eigenen sprite
+
+        if self.combat.active:  # hat noch keine eigenen sprites
+            pass
 
         sprite_sheet_name = sprite_sheet + "_" + self.direction
         sprites_ = self.sprites.get(sprite_sheet_name, self.sprites.get("idle_right"))
@@ -295,12 +282,7 @@ class Player(pygame.sprite.Sprite):
         if self.wall_jump_timer > 0:
             self.wall_jump_timer -= 1
 
-        if self.pogo_active_timer > 0:
-            self.pogo_active_timer -= 1
-            if self.pogo_active_timer <= 0:
-                self.pogo = False
-        if self.pogo_cooldown > 0:
-            self.pogo_cooldown -= 1
+        self.combat.update(self.objects)
 
         if self.dashing:
             self.x_vel = self.dash_velocity if self.direction == "right" else -self.dash_velocity
@@ -317,11 +299,6 @@ class Player(pygame.sprite.Sprite):
         self.handle_horizontal_collision(self.blocks)
         self.move(0, self.y_vel)
 
-        if self.pogo and self.y_vel > 0:
-            if self.check_pogo():
-                self.pogo = False
-                self.pogo_active_timer = 0
-
         if not self.is_pogoing:
             self.handle_vertical_collision(self.blocks, self.y_vel)
             self.handle_object_collision(self.objects)
@@ -330,10 +307,11 @@ class Player(pygame.sprite.Sprite):
             self.is_pogoing = False
 
         if not self.is_alive:
-            self.x_vel = 0  # Sicherstellen, dass er am Spawn stillsteht
+            self.x_vel = 0
             self.y_vel = 0
             self.update_sprite()
             return
+
         self.check_grounded()
         self.handle_input()
         self.update_jump()
@@ -344,11 +322,4 @@ class Player(pygame.sprite.Sprite):
                                                    self.rect.midbottom[1] - int(offset_y)))
         screen.blit(self.sprite, draw_pos)
 
-        pogo_color = (255, 0, 0) if self.pogo else (100, 100, 100)
-
-        # Pogozeichnung vorrübergehen statt sprite
-        if self.pogo:
-            pygame.draw.rect(screen, pogo_color,
-                         (self.pogo_trigger.x - offset_x,
-                          self.pogo_trigger.y - offset_y,
-                          self.pogo_trigger.width, self.pogo_trigger.height), 2)
+        self.combat.draw(screen, offset_x, offset_y)
