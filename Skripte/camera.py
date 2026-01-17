@@ -50,3 +50,12 @@ class Camera:
 
     def apply_to_rect(self, rect):
         return rect.move(-int(self.offset.x), -int(self.offset.y))
+
+    def teleport_to_player(self, player, room):
+        # Berechnet die Zielposition sofort, ohne smooth_speed
+        target_x = player.rect.centerx - self.width // 2
+        target_y = player.rect.centery - self.height // 2
+
+        # Grenzen des Raums einhalten
+        self.offset.x = max(room.rect.left, min(target_x, room.rect.right - self.width))
+        self.offset.y = max(room.rect.top, min(target_y, room.rect.bottom - self.height))

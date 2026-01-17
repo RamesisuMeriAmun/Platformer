@@ -3,10 +3,9 @@ import json
 import pygame
 from Skripte.Assets.blocks import Block
 from Skripte.Assets import objects as o
-from Skripte.constants import BLOCK_SIZE
+from Skripte.constants import BLOCK_SIZE, WIDTH, HEIGHT
 from Skripte import rooms
 
-WIDTH, HEIGHT = 1000, 750
 FPS = 60
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -129,7 +128,6 @@ class LevelEditor:
 
             for item in r_data.get("offgrid", []):
                 self.offgrid_tiles.append(item)
-
 
     def run(self):
         run = True

@@ -1,11 +1,9 @@
 import pygame
 from Skripte import constants, sprites
-from Skripte.Assets.blocks import Block
-from Skripte.rooms import Room
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, x, y, width, height, all_objects):
+    def __init__(self, x, y, width, height):
         super().__init__()
         self.rect = pygame.Rect(x, y, width, height)
         self.sprites = sprites.load_sprite_sheets("MainCharacters", "MaskDude", 32, 32, True)
@@ -47,6 +45,17 @@ class Player(pygame.sprite.Sprite):
         self.dash_cooldown = 700
         self.last_dash_time = 0
 
+        # Pogo
+        self.pogo = False
+        self.is_pogoing = False
+        self.pogo_width = self.rect.width * 1.5
+        self.pogo_height = 10
+        self.pogo_trigger = pygame.Rect(0, 0, self.pogo_width, self.pogo_height)
+        self.pogo_active_timer = 0
+        self.pogo_duration = 10
+        self.pogo_cooldown = 0
+        self.pogo_cooldown_max = 40
+
         # Kollision
         self.blocks = []
         self.objects = []
@@ -57,6 +66,7 @@ class Player(pygame.sprite.Sprite):
 
     def handle_input(self):
         keys = pygame.key.get_pressed()
+        mouse = pygame.mouse.get_pressed()
 
         # Movement
         if not self.dashing:
@@ -78,6 +88,12 @@ class Player(pygame.sprite.Sprite):
         # Dash
         if keys[pygame.K_LSHIFT]:
             self.dash()
+
+        if not self.on_ground and keys[pygame.K_s] and mouse[0]:
+            if self.pogo_cooldown <= 0 and self.pogo_active_timer <= 0:
+                self.pogo = True
+                self.pogo_active_timer = self.pogo_duration
+                self.pogo_cooldown = self.pogo_cooldown_max
 
     def move(self, dx, dy):
         self.rect.x += dx
@@ -115,21 +131,21 @@ class Player(pygame.sprite.Sprite):
     def update_jump(self):
         keys = pygame.key.get_pressed()
 
-        if (
-                keys[pygame.K_SPACE]
-                and self.y_vel < 0
-                and self.jump_hold_time < self.MAX_JUMP_HOLD
-                and self.jump_count == 0
-        ):
-            self.y_vel -= self.JUMP_HOLD_FORCE
-            self.jump_hold_time += 1
+        if not self.is_pogoing:
+            if (
+                    keys[pygame.K_SPACE]
+                    and self.y_vel < 0
+                    and self.jump_hold_time < self.MAX_JUMP_HOLD
+                    and self.jump_count == 0
+            ):
+                self.y_vel -= self.JUMP_HOLD_FORCE
+                self.jump_hold_time += 1
 
-        if not keys[pygame.K_SPACE] and self.y_vel < 0:
-            self.y_vel *= 0.35
+            if not keys[pygame.K_SPACE] and self.y_vel < 0:
+                self.y_vel *= 0.35
 
     def check_grounded(self):
         floor_rect = pygame.Rect(self.rect.x, self.rect.bottom, self.rect.width, 2)
-
         found_floor = False
         for block in self.blocks:
             if floor_rect.colliderect(block.rect):
@@ -159,6 +175,28 @@ class Player(pygame.sprite.Sprite):
             self.dash_timer = self.dash_duration
             self.last_dash_time = current_time
             self.can_dash = False
+
+    # Pogo
+    def check_pogo(self):
+        self.pogo_trigger.centerx = self.rect.centerx
+        self.pogo_trigger.top = self.rect.bottom + 5
+        pogo_targets = ["spikes"]
+        if self.y_vel > 0 and self.pogo:
+
+            for obj in self.objects:
+                if self.pogo_trigger.colliderect(obj.rect):
+                    if obj.name in pogo_targets:
+                        self.execute_pogo_bounce()
+                        return True
+        return False
+
+    def execute_pogo_bounce(self):
+        self.y_vel = -self.JUMP_FORCE * 0.8
+        self.is_pogoing = True
+        self.falling_time = 0
+        self.on_ground = False
+        self.jump_count = 1
+        self.can_dash = True
 
     # Collision
     def set_active_collision(self, blocks, objects):
@@ -219,7 +257,10 @@ class Player(pygame.sprite.Sprite):
             self.rect.topleft = self.spawn
             self.x_vel = 0
             self.y_vel = 0
-            self.is_alive = True
+            self.dashing = False  # WICHTIG: Dash sofort stoppen
+            self.dash_timer = 0  # Timer zurücksetzen
+            self.wall_jump_timer = 0  # Walljump-Momentum stoppen
+            self.animation_count = 0
 
     # Display
     def update_sprite(self):
@@ -236,6 +277,8 @@ class Player(pygame.sprite.Sprite):
             sprite_sheet = "fall"
         elif self.x_vel != 0:
             sprite_sheet = "run"
+        elif self.pogo:
+            sprite_sheet = "fall"  # hat noch keinen eigenen sprite
 
         sprite_sheet_name = sprite_sheet + "_" + self.direction
         sprites_ = self.sprites.get(sprite_sheet_name, self.sprites.get("idle_right"))
@@ -252,6 +295,13 @@ class Player(pygame.sprite.Sprite):
         if self.wall_jump_timer > 0:
             self.wall_jump_timer -= 1
 
+        if self.pogo_active_timer > 0:
+            self.pogo_active_timer -= 1
+            if self.pogo_active_timer <= 0:
+                self.pogo = False
+        if self.pogo_cooldown > 0:
+            self.pogo_cooldown -= 1
+
         if self.dashing:
             self.x_vel = self.dash_velocity if self.direction == "right" else -self.dash_velocity
             self.y_vel = 0
@@ -265,21 +315,40 @@ class Player(pygame.sprite.Sprite):
 
         self.move(self.x_vel, 0)
         self.handle_horizontal_collision(self.blocks)
-
         self.move(0, self.y_vel)
-        self.handle_vertical_collision(self.blocks, self.y_vel)
 
+        if self.pogo and self.y_vel > 0:
+            if self.check_pogo():
+                self.pogo = False
+                self.pogo_active_timer = 0
+
+        if not self.is_pogoing:
+            self.handle_vertical_collision(self.blocks, self.y_vel)
+            self.handle_object_collision(self.objects)
+
+        if self.y_vel >= 0:
+            self.is_pogoing = False
+
+        if not self.is_alive:
+            self.x_vel = 0  # Sicherstellen, dass er am Spawn stillsteht
+            self.y_vel = 0
+            self.update_sprite()
+            return
         self.check_grounded()
         self.handle_input()
-        self.handle_object_collision(self.objects)
         self.update_jump()
-
         self.update_sprite()
 
-    # In der Player Klasse anpassen:
     def draw(self, screen, offset_x=0, offset_y=0):
-        # Wir berechnen das Rect mit dem Kamera-Offset
-        # midbottom sorgt dafür, dass der Spieler fest auf dem Boden steht
         draw_pos = self.sprite.get_rect(midbottom=(self.rect.midbottom[0] - int(offset_x),
                                                    self.rect.midbottom[1] - int(offset_y)))
         screen.blit(self.sprite, draw_pos)
+
+        pogo_color = (255, 0, 0) if self.pogo else (100, 100, 100)
+
+        # Pogozeichnung vorrübergehen statt sprite
+        if self.pogo:
+            pygame.draw.rect(screen, pogo_color,
+                         (self.pogo_trigger.x - offset_x,
+                          self.pogo_trigger.y - offset_y,
+                          self.pogo_trigger.width, self.pogo_trigger.height), 2)
