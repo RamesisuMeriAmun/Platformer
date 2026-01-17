@@ -13,7 +13,6 @@
                 454.9999999999984
             ],
             "grid": {
-                "1;5": "Braune Erde",
                 "2;5": "Braune Erde",
                 "3;5": "Braune Erde",
                 "4;5": "Braune Erde",
@@ -25,28 +24,29 @@
                 "7;3": "Braune Erde",
                 "4;2": "Braune Erde",
                 "10;4": "Braune Erde",
-                "12;3": "Braune Erde"
+                "12;3": "Braune Erde",
+                "1;5": "Braune Erde"
             },
             "offgrid": [
                 {
-                    "type": "Fire",
+                    "type": "Spikes",
                     "pos": [
-                        503.0,
-                        418.0
+                        131.0,
+                        449.0
                     ]
                 },
                 {
                     "type": "Trampoline",
                     "pos": [
-                        402.0,
+                        404.0,
                         426.0
                     ]
                 },
                 {
-                    "type": "Spikes",
+                    "type": "Fire",
                     "pos": [
-                        130.0,
-                        450.0
+                        513.0,
+                        419.0
                     ]
                 }
             ]
@@ -60,8 +60,8 @@
             ],
             "type": "NORMAL",
             "spawn": [
-                1296.0,
-                -528.0
+                1304.999999999999,
+                244.99999999999818
             ],
             "grid": {
                 "14;3": "Braune Erde",
@@ -95,8 +95,8 @@
             ],
             "type": "NORMAL",
             "spawn": [
-                144.0,
-                -912.0
+                1184.999999999999,
+                -510.0000000000009
             ],
             "grid": {
                 "12;-5": "Braune Erde",
@@ -119,8 +119,8 @@
             ],
             "type": "NORMAL",
             "spawn": [
-                1296.0,
-                -1296.0
+                1304.999999999999,
+                -910.0000000000009
             ],
             "grid": {
                 "13;-9": "Braune Erde",

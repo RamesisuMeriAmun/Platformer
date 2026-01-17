@@ -1,11 +1,10 @@
 import pygame
 from Skripte import constants, sprites
-from Skripte.Assets.blocks import Block
-from Skripte.rooms import Room
+from Skripte.attackhandler import Attackhandler  # NEU: Import des externen Handlers
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, x, y, width, height, all_objects):
+    def __init__(self, x, y, width, height):
         super().__init__()
         self.rect = pygame.Rect(x, y, width, height)
         self.sprites = sprites.load_sprite_sheets("MainCharacters", "MaskDude", 32, 32, True)
@@ -35,7 +34,7 @@ class Player(pygame.sprite.Sprite):
         self.wall_jump_force_x = 5
         self.wall_jump_force_y = 7
         self.is_on_wall = False
-        self.wall_direction = 0 # -1 = left, 1 = right
+        self.wall_direction = 0  # -1 = left, 1 = right
         self.wall_jump_timer = 0
 
         # Dash
@@ -47,6 +46,10 @@ class Player(pygame.sprite.Sprite):
         self.dash_cooldown = 700
         self.last_dash_time = 0
 
+        # Pogo / Combat
+        self.combat = Attackhandler(self)
+        self.is_pogoing = False
+
         # Kollision
         self.blocks = []
         self.objects = []
@@ -57,6 +60,7 @@ class Player(pygame.sprite.Sprite):
 
     def handle_input(self):
         keys = pygame.key.get_pressed()
+        mouse = pygame.mouse.get_pressed()
 
         # Movement
         if not self.dashing:
@@ -78,6 +82,17 @@ class Player(pygame.sprite.Sprite):
         # Dash
         if keys[pygame.K_LSHIFT]:
             self.dash()
+
+        # Angriff
+        if mouse[0]:
+            if keys[pygame.K_s]:
+                self.combat.trigger("down")
+            elif keys[pygame.K_w]:
+                self.combat.trigger("up")
+            elif self.direction == "left":
+                self.combat.trigger("left")
+            else:
+                self.combat.trigger("right")
 
     def move(self, dx, dy):
         self.rect.x += dx
@@ -115,21 +130,21 @@ class Player(pygame.sprite.Sprite):
     def update_jump(self):
         keys = pygame.key.get_pressed()
 
-        if (
-                keys[pygame.K_SPACE]
-                and self.y_vel < 0
-                and self.jump_hold_time < self.MAX_JUMP_HOLD
-                and self.jump_count == 0
-        ):
-            self.y_vel -= self.JUMP_HOLD_FORCE
-            self.jump_hold_time += 1
+        if not self.is_pogoing:
+            if (
+                    keys[pygame.K_SPACE]
+                    and self.y_vel < 0
+                    and self.jump_hold_time < self.MAX_JUMP_HOLD
+                    and self.jump_count == 0  # Korrektur: Muss jump_count 1 sein beim Halten
+            ):
+                self.y_vel -= self.JUMP_HOLD_FORCE
+                self.jump_hold_time += 1
 
-        if not keys[pygame.K_SPACE] and self.y_vel < 0:
-            self.y_vel *= 0.35
+            if not keys[pygame.K_SPACE] and self.y_vel < 0:
+                self.y_vel *= 0.35
 
     def check_grounded(self):
         floor_rect = pygame.Rect(self.rect.x, self.rect.bottom, self.rect.width, 2)
-
         found_floor = False
         for block in self.blocks:
             if floor_rect.colliderect(block.rect):
@@ -160,7 +175,15 @@ class Player(pygame.sprite.Sprite):
             self.last_dash_time = current_time
             self.can_dash = False
 
-    # Collision
+    def execute_pogo_bounce(self):
+        self.y_vel = -self.JUMP_FORCE * 0.8
+        self.is_pogoing = True
+        self.falling_time = 0
+        self.on_ground = False
+        self.jump_count = 1
+        self.can_dash = True
+
+    # Kollision
     def set_active_collision(self, blocks, objects):
         self.blocks = blocks
         self.objects = objects
@@ -219,6 +242,10 @@ class Player(pygame.sprite.Sprite):
             self.rect.topleft = self.spawn
             self.x_vel = 0
             self.y_vel = 0
+            self.dashing = False
+            self.dash_timer = 0
+            self.wall_jump_timer = 0
+            self.animation_count = 0
             self.is_alive = True
 
     # Display
@@ -232,10 +259,13 @@ class Player(pygame.sprite.Sprite):
             sprite_sheet = "wall_jump"
         elif self.y_vel < 0:
             sprite_sheet = "jump" if self.jump_count == 1 else "double_jump"
-        elif self.y_vel > constants.GRAVITY + 1 and self.jump_count > 0:
+        elif self.y_vel > constants.GRAVITY + 1:
             sprite_sheet = "fall"
         elif self.x_vel != 0:
             sprite_sheet = "run"
+
+        if self.combat.active:  # hat noch keine eigenen sprites
+            pass
 
         sprite_sheet_name = sprite_sheet + "_" + self.direction
         sprites_ = self.sprites.get(sprite_sheet_name, self.sprites.get("idle_right"))
@@ -252,6 +282,8 @@ class Player(pygame.sprite.Sprite):
         if self.wall_jump_timer > 0:
             self.wall_jump_timer -= 1
 
+        self.combat.update(self.objects)
+
         if self.dashing:
             self.x_vel = self.dash_velocity if self.direction == "right" else -self.dash_velocity
             self.y_vel = 0
@@ -265,21 +297,29 @@ class Player(pygame.sprite.Sprite):
 
         self.move(self.x_vel, 0)
         self.handle_horizontal_collision(self.blocks)
-
         self.move(0, self.y_vel)
-        self.handle_vertical_collision(self.blocks, self.y_vel)
+
+        if not self.is_pogoing:
+            self.handle_vertical_collision(self.blocks, self.y_vel)
+            self.handle_object_collision(self.objects)
+
+        if self.y_vel >= 0:
+            self.is_pogoing = False
+
+        if not self.is_alive:
+            self.x_vel = 0
+            self.y_vel = 0
+            self.update_sprite()
+            return
 
         self.check_grounded()
         self.handle_input()
-        self.handle_object_collision(self.objects)
         self.update_jump()
-
         self.update_sprite()
 
-    # In der Player Klasse anpassen:
     def draw(self, screen, offset_x=0, offset_y=0):
-        # Wir berechnen das Rect mit dem Kamera-Offset
-        # midbottom sorgt dafür, dass der Spieler fest auf dem Boden steht
         draw_pos = self.sprite.get_rect(midbottom=(self.rect.midbottom[0] - int(offset_x),
                                                    self.rect.midbottom[1] - int(offset_y)))
         screen.blit(self.sprite, draw_pos)
+
+        self.combat.draw(screen, offset_x, offset_y)

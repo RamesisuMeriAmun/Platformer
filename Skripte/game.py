@@ -34,7 +34,7 @@ class Game:
         )
 
         self.objects = level.load_level("map.json")
-        self.player = player.Player(100, 100, 40, 50, self.objects)
+        self.player = player.Player(100, 100, 40, 50)
 
     def update_active_content(self):
         if not self.room:
@@ -104,6 +104,9 @@ class Game:
                             room.rect.height)
 
             self.player.loop()
+            if not self.player.is_alive:
+                self.camera.teleport_to_player(self.player, self.room)
+                self.player.is_alive = True
 
             for r in self.active_rooms:
                 for obj in r.objects:
