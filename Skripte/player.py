@@ -247,10 +247,12 @@ class Player(pygame.sprite.Sprite):
             self.rect.topleft = self.spawn
             self.x_vel = 0
             self.y_vel = 0
+            self.direction = "right"
             self.dashing = False
             self.dash_timer = 0
             self.wall_jump_timer = 0
             self.animation_count = 0
+            self.on_ground = True
             self.is_alive = True
 
     # Display
@@ -284,6 +286,10 @@ class Player(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.sprite)
 
     def loop(self):
+        if not self.is_alive:
+            self.death()  # Teleportiert und setzt Werte zurück
+            return
+
         if self.wall_jump_timer > 0:
             self.wall_jump_timer -= 1
 
