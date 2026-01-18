@@ -49,6 +49,7 @@ class Player(pygame.sprite.Sprite):
         # Pogo / Combat
         self.combat = Attackhandler(self)
         self.is_pogoing = False
+        self.is_attacking = False
 
         # Kollision
         self.blocks = []
@@ -85,14 +86,18 @@ class Player(pygame.sprite.Sprite):
 
         # Angriff
         if mouse[0]:
-            if keys[pygame.K_s]:
-                self.combat.trigger("down")
-            elif keys[pygame.K_w]:
-                self.combat.trigger("up")
-            elif self.direction == "left":
-                self.combat.trigger("left")
-            else:
-                self.combat.trigger("right")
+            if not self.is_attacking:
+                if keys[pygame.K_s]:
+                    self.combat.trigger("down")
+                elif keys[pygame.K_w]:
+                    self.combat.trigger("up")
+                elif self.direction == "left":
+                    self.combat.trigger("left")
+                else:
+                    self.combat.trigger("right")
+                self.is_attacking = True
+        else:
+            self.is_attacking = False
 
     def move(self, dx, dy):
         self.rect.x += dx
