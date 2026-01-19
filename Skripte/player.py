@@ -334,3 +334,19 @@ class Player(pygame.sprite.Sprite):
         screen.blit(self.sprite, draw_pos)
 
         self.combat.draw(screen, offset_x, offset_y)
+
+    def draw_debug(self, screen, offset_x, offset_y):
+
+        rel_rect = self.rect.move(-offset_x, -offset_y)
+        pygame.draw.rect(screen, (255, 0, 0), rel_rect, 2)
+
+        floor_rect = pygame.Rect(rel_rect.x, rel_rect.bottom, rel_rect.width, 2)
+        pygame.draw.rect(screen, (255, 255, 0), floor_rect, 2)
+
+        if self.mask:
+            mask_surf = self.mask.to_surface(setcolor=(0, 100, 255, 150), unsetcolor=(0, 0, 0, 0))
+            draw_pos = self.sprite.get_rect(midbottom=rel_rect.midbottom)
+            screen.blit(mask_surf, draw_pos)
+
+        if self.combat:
+            self.combat.draw(screen, offset_x, offset_y)

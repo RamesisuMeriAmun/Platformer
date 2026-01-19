@@ -52,10 +52,11 @@ class Camera:
         return rect.move(-int(self.offset.x), -int(self.offset.y))
 
     def teleport_to_player(self, player, room):
-        # Berechnet die Zielposition sofort, ohne smooth_speed
         target_x = player.rect.centerx - self.width // 2
         target_y = player.rect.centery - self.height // 2
 
-        # Grenzen des Raums einhalten
         self.offset.x = max(room.rect.left, min(target_x, room.rect.right - self.width))
         self.offset.y = max(room.rect.top, min(target_y, room.rect.bottom - self.height))
+
+    def draw_debug(self, screen):
+        pygame.draw.rect(screen, (0, 255, 0), self.camera_box, 2)

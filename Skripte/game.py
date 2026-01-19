@@ -36,6 +36,13 @@ class Game:
         self.objects = level.load_level("map.json")
         self.player = player.Player(100, 100, 40, 50)
 
+        #  Debugging
+        self.debug = False
+        self.font = pygame.font.SysFont("Arial", 18)
+        self.zoom_level = 1.0
+        self.debug_scroll_off_x = 0
+        self.debug_scroll_off_y = 0
+
     def update_active_content(self):
         if not self.room:
             return
@@ -72,7 +79,123 @@ class Game:
 
         self.player.draw(self.screen, int(self.camera.offset.x), int(self.camera.offset.y))
 
+        if self.debug:
+            debug_surf = pygame.Surface((constants.WIDTH, constants.HEIGHT))
+            debug_surf.fill((30, 30, 30))
+            scroll_x = (self.player.rect.centerx - (constants.WIDTH / 2) / self.zoom_level) + self.debug_scroll_off_x
+            scroll_y = (self.player.rect.centery - (constants.HEIGHT / 2) / self.zoom_level) + self.debug_scroll_off_y
+
+            for r in self.active_rooms:
+                # 1.
+                r_rect = pygame.Rect((r.rect.x - scroll_x) * self.zoom_level,
+                                     (r.rect.y - scroll_y) * self.zoom_level,
+                                     r.rect.width * self.zoom_level,
+                                     r.rect.height * self.zoom_level)
+                pygame.draw.rect(debug_surf, (0, 255, 0), r_rect, 2)
+
+                # 2.
+                for item in r.blocks + r.objects:
+                    img = item.sprite if hasattr(item, 'sprite') else item.image
+                    if img:
+                        s_w = int(img.get_width() * self.zoom_level)
+                        s_h = int(img.get_height() * self.zoom_level)
+                        scaled = pygame.transform.scale(img, (max(1, s_w), max(1, s_h)))
+
+                        draw_x = (item.rect.x - scroll_x) * self.zoom_level
+                        draw_y = (item.rect.y - scroll_y) * self.zoom_level
+                        debug_surf.blit(scaled, (draw_x, draw_y))
+
+                    item_hitbox = pygame.Rect(
+                        (item.rect.x - scroll_x) * self.zoom_level,
+                        (item.rect.y - scroll_y) * self.zoom_level,
+                        item.rect.width * self.zoom_level,
+                        item.rect.height * self.zoom_level
+                    )
+                    pygame.draw.rect(debug_surf, (255, 0, 0), item_hitbox, 1)
+
+            # 3.
+            p_img = self.player.sprite
+            if p_img:
+                ps_w = int(p_img.get_width() * self.zoom_level)
+                ps_h = int(p_img.get_height() * self.zoom_level)
+                p_scaled = pygame.transform.scale(p_img, (max(1, ps_w), max(1, ps_h)))
+
+                p_midbottom_x = (self.player.rect.midbottom[0] - scroll_x) * self.zoom_level
+                p_midbottom_y = (self.player.rect.midbottom[1] - scroll_y) * self.zoom_level
+
+                p_draw_rect = p_scaled.get_rect(midbottom=(int(p_midbottom_x), int(p_midbottom_y)))
+                debug_surf.blit(p_scaled, p_draw_rect)
+
+            p_rect_scaled = pygame.Rect(
+                (self.player.rect.x - scroll_x) * self.zoom_level,
+                (self.player.rect.y - scroll_y) * self.zoom_level,
+                self.player.rect.width * self.zoom_level,
+                self.player.rect.height * self.zoom_level
+            )
+            pygame.draw.rect(debug_surf, (255, 255, 255), p_rect_scaled, 1)
+
+            # 4.
+            if self.player.combat and self.player.combat.active:
+                atk_rect = self.player.combat.hitbox
+                atk_debug_rect = pygame.Rect(
+                    (atk_rect.x - scroll_x) * self.zoom_level,
+                    (atk_rect.y - scroll_y) * self.zoom_level,
+                    atk_rect.width * self.zoom_level,
+                    atk_rect.height * self.zoom_level
+                )
+                pygame.draw.rect(debug_surf, (255, 0, 255), atk_debug_rect, 2)
+
+            # 5.
+            c_box = self.camera.camera_box
+            c_rect = pygame.Rect(
+                (c_box.x + self.camera.offset.x - scroll_x) * self.zoom_level,
+                (c_box.y + self.camera.offset.y - scroll_y) * self.zoom_level,
+                c_box.width * self.zoom_level,
+                c_box.height * self.zoom_level
+            )
+            pygame.draw.rect(debug_surf, (255, 255, 0), c_rect, 2)
+
+            self.screen.blit(debug_surf, (0, 0))
+            self.draw_debug()
+
         pygame.display.update()
+
+    def draw_debug(self):
+        #  Linke Seite: Status Infos
+        fps = str(int(self.clock.get_fps()))
+        pos = f"Pos: {self.player.rect.x}, {self.player.rect.y}"
+        zoom = f"Zoom: {int(self.zoom_level * 100)}%"
+        room_info = f"Room ID: {self.room.room_id if self.room else 'None'}"
+
+        status_text = [f"FPS: {fps}", pos, zoom, room_info]
+
+        for i, text in enumerate(status_text):
+            img = self.font.render(text, True, (255, 255, 255))
+            shadow = self.font.render(text, True, (0, 0, 0))
+            self.screen.blit(shadow, (11, 11 + i * 20))
+            self.screen.blit(img, (10, 10 + i * 20))
+
+        #  Rechte Seite: Steuerungshilfe
+        controls_help = [
+            "CONTROLS:",
+            "F3: Close Debug",
+            "+ / -: Zoom In/Out",
+            "Arrows: Move Cam",
+            "R: Reset Cam"
+        ]
+
+        for i, text in enumerate(controls_help):
+            color = (255, 200, 0) if i == 0 else (200, 200, 200)
+
+            img = self.font.render(text, True, color)
+            shadow = self.font.render(text, True, (0, 0, 0))
+
+            text_width = img.get_width()
+            x_pos = constants.WIDTH - text_width - 20
+            y_pos = 10 + i * 20
+
+            self.screen.blit(shadow, (x_pos + 1, y_pos + 1))
+            self.screen.blit(img, (x_pos, y_pos))
 
     def open_game_menu(self):
         print("Game menu opened")
@@ -88,6 +211,33 @@ class Game:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         self.open_game_menu()
+
+                    # Debug
+                    if event.key == pygame.K_F3:
+                        self.debug = not self.debug
+                        self.debug_scroll_off_x = 0
+                        self.debug_scroll_off_y = 0
+                    if event.key == pygame.K_r:
+                        self.debug_scroll_off_x = 0
+                        self.debug_scroll_off_y = 0
+                    if event.key == pygame.K_PLUS or event.key == pygame.K_KP_PLUS:
+                        self.zoom_level += 0.1
+                    if event.key == pygame.K_MINUS or event.key == pygame.K_KP_MINUS:
+                        self.zoom_level = max(0.1, self.zoom_level - 0.1)
+
+            if self.debug:
+                keys = pygame.key.get_pressed()
+                debug_cam_speed = 10 / self.zoom_level
+
+                if keys[pygame.K_LEFT]:
+                    self.debug_scroll_off_x -= debug_cam_speed
+                if keys[pygame.K_RIGHT]:
+                    self.debug_scroll_off_x += debug_cam_speed
+                if keys[pygame.K_UP]:
+                    self.debug_scroll_off_y -= debug_cam_speed
+                if keys[pygame.K_DOWN]:
+                    self.debug_scroll_off_y += debug_cam_speed
+
 
             # Raum
             for room in self.objects:
