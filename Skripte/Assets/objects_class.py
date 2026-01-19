@@ -12,3 +12,7 @@ class Object(pygame.sprite.Sprite):
 
     def draw(self, win, offset_x, offset_y):
         win.blit(self.image, (self.rect.x - int(offset_x), self.rect.y - int(offset_y)))
+
+    def draw_debug(self, screen, offset_x, offset_y):
+        rel_rect = self.rect.move(-offset_x, -offset_y)
+        pygame.draw.rect(screen, (0, 255, 255), rel_rect, 1)
