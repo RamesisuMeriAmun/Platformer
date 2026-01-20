@@ -242,6 +242,7 @@ class Player(pygame.sprite.Sprite):
 
     def hit_head(self):
         self.y_vel = 1
+        self.is_pogoing = False
 
     def handle_horizontal_collision(self, blocks):
         self.is_on_wall = False
@@ -362,9 +363,8 @@ class Player(pygame.sprite.Sprite):
         self.handle_horizontal_collision(self.blocks)
         self.move(0, self.y_vel)
 
-        if not self.is_pogoing:
-            self.handle_vertical_collision(self.blocks, self.y_vel)
-            self.handle_object_collision(self.objects)
+        self.handle_vertical_collision(self.blocks, self.y_vel)
+        self.handle_object_collision(self.objects)
 
         if self.y_vel >= 0:
             self.is_pogoing = False
