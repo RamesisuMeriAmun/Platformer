@@ -39,12 +39,19 @@ class Player(pygame.sprite.Sprite):
 
         # Dash
         self.dashing = False
-        self.dash_velocity = 15
-        self.dash_duration = 10
+        self.dash_velocity = 12
+        self.dash_duration = 15
         self.dash_timer = 0
         self.can_dash = True
         self.dash_cooldown = 700
         self.last_dash_time = 0
+
+        # Auto-Dash
+        self.auto_dashing = False
+        self.auto_dash_target_x = 0
+        self.auto_dash_target_y = 0
+        self.auto_dash_speed = 18
+        self.attack_pressed = False
 
         # Pogo / Combat
         self.combat = Attackhandler(self)
@@ -84,20 +91,35 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_LSHIFT]:
             self.dash()
 
-        # Angriff
         if mouse[0]:
-            if not self.is_attacking:
-                if keys[pygame.K_s]:
-                    self.combat.trigger("down")
-                elif keys[pygame.K_w]:
-                    self.combat.trigger("up")
-                elif self.direction == "left":
-                    self.combat.trigger("left")
+            if not self.attack_pressed:
+
+                if self.dashing:
+                    direction = None
+                    if keys[pygame.K_w]:
+                        direction = "up"
+                    elif keys[pygame.K_a]:
+                        direction = "left"
+                    elif keys[pygame.K_d]:
+                        direction = "right"
+
+                    self.combat.trigger_dash_attack(self.blocks, direction)
+
                 else:
-                    self.combat.trigger("right")
-                self.is_attacking = True
-        else:
-            self.is_attacking = False
+                    if keys[pygame.K_s]:
+                        self.combat.trigger("down")
+                    elif keys[pygame.K_w]:
+                        self.combat.trigger("up")
+                    elif self.direction == "left":
+                        self.combat.trigger("left")
+                    else:
+                        self.combat.trigger("right")
+                    self.is_attacking = True
+
+                self.attack_pressed = True
+            else:
+                self.attack_pressed = False
+                self.is_attacking = False
 
     def move(self, dx, dy):
         self.rect.x += dx
@@ -180,6 +202,16 @@ class Player(pygame.sprite.Sprite):
             self.last_dash_time = current_time
             self.can_dash = False
 
+    # Auto-Dash
+    def start_auto_dash(self, target_x, target_y):
+        self.auto_dashing = True
+        self.auto_dash_target_x = target_x
+        self.auto_dash_target_y = target_y
+        self.x_vel = 0
+        self.y_vel = 0
+        self.jump_count = 1
+
+    # Pogo
     def execute_pogo_bounce(self):
         self.y_vel = -self.JUMP_FORCE * 0.8
         self.is_pogoing = True
@@ -287,8 +319,28 @@ class Player(pygame.sprite.Sprite):
 
     def loop(self):
         if not self.is_alive:
-            self.death()  # Teleportiert und setzt Werte zurück
+            self.death()
             return
+
+        if self.auto_dashing:
+            pull_speed = self.auto_dash_speed + 5
+
+            dx = self.auto_dash_target_x - self.rect.x
+            if abs(dx) > pull_speed:
+                self.rect.x += pull_speed if dx > 0 else -pull_speed
+            else:
+                self.rect.x = self.auto_dash_target_x
+
+            dy = self.auto_dash_target_y - self.rect.y
+            if abs(dy) > pull_speed:
+                self.rect.y += pull_speed if dy > 0 else -pull_speed
+            else:
+                self.rect.y = self.auto_dash_target_y
+
+            if self.rect.x == self.auto_dash_target_x and self.rect.y == self.auto_dash_target_y:
+                self.auto_dashing = False
+                self.dashing = False  # Setzt auch den normalen Dash zurück
+                self.y_vel = 0
 
         if self.wall_jump_timer > 0:
             self.wall_jump_timer -= 1
