@@ -222,16 +222,16 @@ class LevelEditor:
                     label = self.font.render(f"ROOM: {r_type}", True, color)
                     self.window.blit(label, (rect_screen.x + 5, rect_screen.y + 5))
 
-                    if "spawn" in room:
-                        sp = room["spawn"]
-                        s_size = max(4, int(10 * self.zoom))
-                        spawn_rect = pygame.Rect(
-                            (sp[0] - self.scroll[0]) * self.zoom - s_size // 2,
-                            (sp[1] - self.scroll[1]) * self.zoom - s_size // 2,
-                            s_size,
-                            s_size,
-                        )
-                        pygame.draw.rect(self.window, (255, 0, 255), spawn_rect)
+                if "spawn" in room:
+                    sp = room["spawn"]
+                    s_size = max(4, int(10 * self.zoom))
+                    spawn_rect = pygame.Rect(
+                        (sp[0] - self.scroll[0]) * self.zoom - s_size // 2,
+                        (sp[1] - self.scroll[1]) * self.zoom - s_size // 2,
+                        s_size,
+                        s_size,
+                    )
+                    pygame.draw.rect(self.window, (255, 0, 255), spawn_rect)
 
             # Raum-Ziehen Vorschau
             if self.room_mode and self.room_start_pos:
