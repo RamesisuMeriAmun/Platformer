@@ -144,6 +144,18 @@ class Game:
                     atk_rect.height * self.zoom_level
                 )
                 pygame.draw.rect(debug_surf, (255, 0, 255), atk_debug_rect, 2)
+            # 4b.
+            if self.player.combat and self.player.combat.dash_attack_beam_rect \
+                    and self.player.combat.dash_attack_beam_timer > 0:
+                beam_rect = self.player.combat.dash_attack_beam_rect
+                beam_debug_rect = pygame.Rect(
+                    (beam_rect.x - scroll_x) * self.zoom_level,
+                    (beam_rect.y - scroll_y) * self.zoom_level,
+                    beam_rect.width * self.zoom_level,
+                    beam_rect.height * self.zoom_level
+                )
+
+                pygame.draw.rect(debug_surf, (0, 255, 255), beam_debug_rect, 2)
 
             # 5.
             c_box = self.camera.camera_box
