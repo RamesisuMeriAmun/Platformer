@@ -34,7 +34,7 @@ class Game:
         )
 
         self.objects = level.load_level("map.json")
-        self.player = player.Player(100, 100, 40, 50)
+        self.player = player.Player(100, 100, 20, 25)
 
         #  Debugging
         self.debug = False

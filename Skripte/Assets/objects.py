@@ -6,8 +6,8 @@ from Skripte.constants import ANIMATION_DELAY
 
 
 class Lava(Object):
-    def __init__(self, x, y, width, height):
-        super().__init__(x, y, width, height, "lava")
+    def __init__(self, x, y, width, height, hitbox_data=None):
+        super().__init__(x, y, width, height, "lava", hitbox_data)
         self.lava = load_sprite_sheets("Traps", "Lava", width, height)
         self.image = self.lava.get("lava", [pygame.Surface((width, height))])[0]
         self.mask = pygame.mask.from_surface(self.image)
@@ -15,8 +15,8 @@ class Lava(Object):
 
 class Fire(Object):
 
-    def __init__(self, x, y, width, height):
-        super().__init__(x, y, width, height, "fire")
+    def __init__(self, x, y, width, height, hitbox_data=None):
+        super().__init__(x, y, width, height, "fire", hitbox_data)
         self.fire = load_sprite_sheets("Traps", "Fire", width, height)
         self.image = self.fire.get("off", [pygame.Surface((width, height))])[0]
         self.mask = pygame.mask.from_surface(self.image)
@@ -35,8 +35,8 @@ class Fire(Object):
 
 
 class Trampoline(Object):
-    def __init__(self, x, y, width, height):
-        super().__init__(x, y, width, height, "trampoline")
+    def __init__(self, x, y, width, height, hitbox_data=None):
+        super().__init__(x, y, width, height, "trampoline", hitbox_data)
         self.trampoline = load_sprite_sheets("Traps", "Trampoline", width, height)
         self.image = self.trampoline.get("Idle", [pygame.Surface((width, height))])[0]
         self.mask = pygame.mask.from_surface(self.image)
@@ -51,8 +51,8 @@ class Trampoline(Object):
 
 class Checkpoint(Object):
 
-    def __init__(self, x, y, width, height):
-        super().__init__(x, y, width, height, "checkpoint")
+    def __init__(self, x, y, width, height, hitbox_data=None):
+        super().__init__(x, y, width, height, "checkpoint", hitbox_data)
         self.checkpoint = load_sprite_sheets("Items", "Checkpoints", width, height, False, "Checkpoint")
         self.image = self.checkpoint.get("Checkpoint (No Flag)", [pygame.Surface((width, height))])[0]
         self.mask = pygame.mask.from_surface(self.image)
@@ -75,8 +75,8 @@ class Checkpoint(Object):
 
 
 class Spikes(Object):
-    def __init__(self, x, y, width, height):
-        super().__init__(x, y, width, height, "spikes")
+    def __init__(self, x, y, width, height, hitbox_data=None):
+        super().__init__(x, y, width, height, "spikes", hitbox_data)
         self.spike = load_sprite_sheets("Traps", "Spikes", width, height)
         self.image = self.spike.get("spikes", [pygame.Surface((width, height))])[0]
         self.mask = pygame.mask.from_surface(self.image)
@@ -87,5 +87,5 @@ OBJECTS_EDITOR_TILE_MAPPING = {
     "Lava": {"class": Lava, "width": 96, "height": 20},
     "Trampoline": {"class": Trampoline, "width": 28, "height": 28},
     "Checkpoint": {"class": Checkpoint, "width": 64, "height": 64},
-    "Spikes": {"class": Spikes, "width": 16, "height": 16},
+    "Spikes": {"class": Spikes, "width": 16, "height": 16, "hitbox_data": (0, 8, 16, 8)},
 }
