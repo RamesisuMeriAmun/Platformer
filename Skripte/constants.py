@@ -5,7 +5,7 @@ FPS = 60
 BACKGROUND_COLOR = (0, 0, 0)
 
 # Player
-VEL = 5
+VEL = 4
 GRAVITY = 0.3
 ANIMATION_DELAY = 5
 

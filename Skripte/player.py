@@ -40,7 +40,7 @@ class Player(pygame.sprite.Sprite):
         # Dash
         self.dashing = False
         self.dash_velocity = 12
-        self.dash_duration = 15
+        self.dash_duration = 12
         self.dash_timer = 0
         self.can_dash = True
         self.dash_cooldown = 700
