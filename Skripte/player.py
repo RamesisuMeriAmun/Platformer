@@ -274,6 +274,10 @@ class Player(pygame.sprite.Sprite):
             self.is_alive = False
             self.death()
 
+        if obj == "lava":
+            self.is_alive = False
+            self.death()
+
     def death(self):
         if not self.is_alive:
             self.rect.topleft = self.spawn
