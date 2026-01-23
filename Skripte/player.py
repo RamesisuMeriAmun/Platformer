@@ -32,7 +32,7 @@ class Player(pygame.sprite.Sprite):
 
         # Walljump
         self.wall_jump_force_x = 3
-        self.wall_jump_force_y = 5
+        self.wall_jump_force_y = 7
         self.is_on_wall = False
         self.wall_direction = 0  # -1 = left, 1 = right
         self.wall_jump_timer = 0
@@ -255,11 +255,13 @@ class Player(pygame.sprite.Sprite):
                     self.is_on_wall = True
                     self.wall_direction = 1
                     self.can_dash = True
+                    self.auto_dashing = False
                 elif self.x_vel < 0:
                     self.rect.left = block.rect.right
                     self.is_on_wall = True
                     self.wall_direction = -1
                     self.can_dash = True
+                    self.auto_dashing = False
 
     def handle_object_collision(self, objects):
         for obj in objects:
