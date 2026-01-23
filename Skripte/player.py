@@ -1,6 +1,6 @@
 import pygame
 from Skripte import constants, sprites
-from Skripte.attackhandler import Attackhandler  # NEU: Import des externen Handlers
+from Skripte.attackhandler import Attackhandler
 
 
 class Player(pygame.sprite.Sprite):
@@ -25,14 +25,14 @@ class Player(pygame.sprite.Sprite):
         self.jump_pressed = False
         self.jump_hold_time = 0
 
-        self.JUMP_FORCE = 9
-        self.DOUBLE_JUMP_FORCE = 7
+        self.JUMP_FORCE = 7
+        self.DOUBLE_JUMP_FORCE = 6
         self.JUMP_HOLD_FORCE = 0.6
         self.MAX_JUMP_HOLD = 12
 
         # Walljump
-        self.wall_jump_force_x = 5
-        self.wall_jump_force_y = 7
+        self.wall_jump_force_x = 3
+        self.wall_jump_force_y = 5
         self.is_on_wall = False
         self.wall_direction = 0  # -1 = left, 1 = right
         self.wall_jump_timer = 0
@@ -282,6 +282,7 @@ class Player(pygame.sprite.Sprite):
             self.direction = "right"
             self.dashing = False
             self.dash_timer = 0
+            self.auto_dashing = False
             self.wall_jump_timer = 0
             self.animation_count = 0
             self.on_ground = True

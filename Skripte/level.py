@@ -35,8 +35,8 @@ def load_level(filename):
             elif t_type in o.OBJECTS_EDITOR_TILE_MAPPING:
                 params = o.OBJECTS_EDITOR_TILE_MAPPING[t_type]
                 cls = params["class"]
-                width = params.get("width", 32)
-                height = params.get("height", 32)
+                width = params.get("width")
+                height = params.get("height")
                 obj = cls(pos_x, pos_y, width, height)
 
                 if params.get("auto_on") and hasattr(obj, "on"):
@@ -54,8 +54,8 @@ def load_level(filename):
             elif t_type in o.OBJECTS_EDITOR_TILE_MAPPING:
                 params = o.OBJECTS_EDITOR_TILE_MAPPING[t_type]
                 cls = params["class"]
-                width = params.get("width", 32)
-                height = params.get("height", 32)
+                width = params.get("width")
+                height = params.get("height")
                 obj = cls(pos[0], pos[1], width, height)
 
                 if params.get("auto_on") and hasattr(obj, "on"):

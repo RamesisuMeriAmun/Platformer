@@ -159,7 +159,7 @@ class LevelEditor:
             else:
                 current_selection = self.tile_list[self.current_type_idx]
 
-            # Gitter zeichnen (Nur sichtbar wenn ongrid aktiv oder im Debug Modus)
+            # Gitter zeichnen
             if self.ongrid or self.debug:
                 for x in range(0, int(WIDTH / self.zoom) + BLOCK_SIZE, BLOCK_SIZE):
                     dx = (x - (self.scroll[0] % BLOCK_SIZE)) * self.zoom
@@ -181,7 +181,6 @@ class LevelEditor:
                 scaled = pygame.transform.scale(img, (max(1, s_w), max(1, s_h)))
                 self.window.blit(scaled, (draw_x, draw_y))
 
-                # Debug Hitboxen fuer Grid-Blöcke (Nur bei F3)
                 if self.debug:
                     pygame.draw.rect(self.window, (255, 0, 0), (draw_x, draw_y, s_w, s_h), 1)
 
@@ -213,11 +212,9 @@ class LevelEditor:
                     r[3] * self.zoom,
                 )
 
-                # Räume sind immer sichtbar, aber im Debug Modus dicker
                 thickness = 3 if self.debug else 1
                 pygame.draw.rect(self.window, color, rect_screen, thickness)
 
-                # Raum-Label und Spawn (Nur im Debug)
                 if self.debug:
                     label = self.font.render(f"ROOM: {r_type}", True, color)
                     self.window.blit(label, (rect_screen.x + 5, rect_screen.y + 5))
@@ -233,7 +230,6 @@ class LevelEditor:
                     )
                     pygame.draw.rect(self.window, (255, 0, 255), spawn_rect)
 
-            # Raum-Ziehen Vorschau
             if self.room_mode and self.room_start_pos:
                 curr_rect = [
                     min(self.room_start_pos[0], world_x),
@@ -249,7 +245,6 @@ class LevelEditor:
                      curr_rect[3] * self.zoom), 1
                 )
 
-            # Assets Vorschau
             if not self.room_mode:
                 p_img = self.assets[current_selection]
                 preview = pygame.transform.scale(p_img, (
@@ -261,15 +256,13 @@ class LevelEditor:
                 else:
                     self.window.blit(preview, mpos)
 
-            # --- UI: Status & Debug Help ---
+            #  UI: Status & Debug Help
             mode_str = "ROOM-MODE" if self.room_mode else "TILE-MODE"
 
-            # Linke Seite (Basis Info)
             info = self.font.render(f"{mode_str} | {current_selection} | Zoom: {int(self.zoom * 100)}%", True,
                                     (255, 255, 255))
             self.window.blit(info, (10, 10))
 
-            # Rechte Seite (Debug Hilfe - wird bei F3 umgeschaltet)
             if self.debug:
                 editor_help = [
                     "DEBUG MODE ACTIVE",
@@ -285,7 +278,6 @@ class LevelEditor:
                     x_pos = WIDTH - h_img.get_width() - 20
                     self.window.blit(h_img, (x_pos, 10 + i * 20))
             else:
-                # Kleiner Hinweis wenn Debug aus ist-
                 hint = self.font.render("Press F3 for Debug Info", True, (100, 100, 100))
                 self.window.blit(hint, (WIDTH - hint.get_width() - 20, 10))
 
@@ -310,7 +302,7 @@ class LevelEditor:
                         if self.room_mode:
                             for room in self.rooms_list[::-1]:
                                 if pygame.Rect(room["rect"]).collidepoint(world_x, world_y):
-                                    self.rooms_list.remove(room);
+                                    self.rooms_list.remove(room)
                                     break
                         else:
                             if self.ongrid and tile_loc in self.tilemap:

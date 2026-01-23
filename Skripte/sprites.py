@@ -26,7 +26,7 @@ def load_sprite_sheets(dir1, dir2, width, height, direction=False, dir3=""):
             surface = pygame.Surface((width, height), pygame.SRCALPHA, 32)
             rect = pygame.Rect(i * width, 0, width, height)
             surface.blit(sprite_sheet, (0, 0), rect)
-            sprites.append(pygame.transform.scale2x(surface))
+            sprites.append(surface)
 
         if direction:
             all_sprites[image.replace(".png", "") + "_right"] = sprites

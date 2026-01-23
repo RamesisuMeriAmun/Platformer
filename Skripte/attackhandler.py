@@ -13,7 +13,7 @@ class Attackhandler:
 
         self.hitbox = pygame.Rect(0, 0, 0, 0)
         self.attack_range = 40
-        self.attack_thickness = 30
+        self.attack_thickness = 20
 
         self.pogo_targets = ["spikes"]
 
@@ -34,8 +34,8 @@ class Attackhandler:
         else:
             dx = 1 if self.player.direction == "right" else -1
 
-        max_range = 300
-        line_thickness = 20
+        max_range = 150
+        line_thickness = 8
 
         if dy == -1:
             beam = pygame.Rect(self.player.rect.centerx - (line_thickness // 2),
