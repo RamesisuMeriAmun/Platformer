@@ -1,4 +1,5 @@
 import pygame
+import json
 from Skripte import constants, sprites
 from Skripte.attackhandler import Attackhandler
 
@@ -7,7 +8,12 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height):
         super().__init__()
         self.rect = pygame.Rect(x, y, width, height)
-        self.sprites = sprites.load_sprite_sheets("MainCharacters", "MaskDude", 32, 32, True)
+        self.sprites = sprites.load_sprite_sheets(
+            "MainCharacters", "MaskDude", 32, 32, True
+        )
+        with open("Data/Settings/settings.json", "r") as f:
+            settings = json.load(f)
+        self.load_settings(settings)
         self.sprite = None
         self.mask = None
         self.direction = "right"
@@ -154,20 +160,28 @@ class Player(pygame.sprite.Sprite):
             self.y_vel = -self.DOUBLE_JUMP_FORCE
             self.jump_count = 2
 
+    def load_settings(self, settings):
+        keybinds = settings.get("keybinds", {})
+        self.key_jump = keybinds.get("jump", pygame.K_SPACE)
+        self.key_left = keybinds.get("left", pygame.K_a)
+        self.key_right = keybinds.get("right", pygame.K_d)
+        self.key_down = keybinds.get("down", pygame.K_s)
+
     def update_jump(self):
         keys = pygame.key.get_pressed()
 
         if not self.is_pogoing:
             if (
-                    keys[pygame.K_SPACE]
-                    and self.y_vel < 0
-                    and self.jump_hold_time < self.MAX_JUMP_HOLD
-                    and self.jump_count == 0  # Korrektur: Muss jump_count 1 sein beim Halten
+                keys[self.key_jump]
+                and self.y_vel < 0
+                and self.jump_hold_time < self.MAX_JUMP_HOLD
+                and self.jump_count
+                == 0  # Korrektur: Muss jump_count 1 sein beim Halten
             ):
                 self.y_vel -= self.JUMP_HOLD_FORCE
                 self.jump_hold_time += 1
 
-            if not keys[pygame.K_SPACE] and self.y_vel < 0:
+            if not keys[self.key_jump] and self.y_vel < 0:
                 self.y_vel *= 0.35
 
     def check_grounded(self):
@@ -320,7 +334,9 @@ class Player(pygame.sprite.Sprite):
         sprite_sheet_name = sprite_sheet + "_" + self.direction
         sprites_ = self.sprites.get(sprite_sheet_name, self.sprites.get("idle_right"))
 
-        sprite_index = (self.animation_count // constants.ANIMATION_DELAY) % len(sprites_)
+        sprite_index = (self.animation_count // constants.ANIMATION_DELAY) % len(
+            sprites_
+        )
         self.sprite = sprites_[sprite_index]
         self.animation_count += 1
         self.update_mask()
@@ -348,7 +364,10 @@ class Player(pygame.sprite.Sprite):
             else:
                 self.rect.y = self.auto_dash_target_y
 
-            if self.rect.x == self.auto_dash_target_x and self.rect.y == self.auto_dash_target_y:
+            if (
+                self.rect.x == self.auto_dash_target_x
+                and self.rect.y == self.auto_dash_target_y
+            ):
                 self.auto_dashing = False
                 self.dashing = False  # Setzt auch den normalen Dash zurück
                 self.y_vel = 0
@@ -359,7 +378,9 @@ class Player(pygame.sprite.Sprite):
         self.combat.update(self.objects)
 
         if self.dashing:
-            self.x_vel = self.dash_velocity if self.direction == "right" else -self.dash_velocity
+            self.x_vel = (
+                self.dash_velocity if self.direction == "right" else -self.dash_velocity
+            )
             self.y_vel = 0
             self.dash_timer -= 1
             if self.dash_timer <= 0:
@@ -391,8 +412,12 @@ class Player(pygame.sprite.Sprite):
         self.update_sprite()
 
     def draw(self, screen, offset_x=0, offset_y=0):
-        draw_pos = self.sprite.get_rect(midbottom=(self.rect.midbottom[0] - int(offset_x),
-                                                   self.rect.midbottom[1] - int(offset_y)))
+        draw_pos = self.sprite.get_rect(
+            midbottom=(
+                self.rect.midbottom[0] - int(offset_x),
+                self.rect.midbottom[1] - int(offset_y),
+            )
+        )
         screen.blit(self.sprite, draw_pos)
 
         self.combat.draw(screen, offset_x, offset_y)
@@ -406,7 +431,9 @@ class Player(pygame.sprite.Sprite):
         pygame.draw.rect(screen, (255, 255, 0), floor_rect, 2)
 
         if self.mask:
-            mask_surf = self.mask.to_surface(setcolor=(0, 100, 255, 150), unsetcolor=(0, 0, 0, 0))
+            mask_surf = self.mask.to_surface(
+                setcolor=(0, 100, 255, 150), unsetcolor=(0, 0, 0, 0)
+            )
             draw_pos = self.sprite.get_rect(midbottom=rel_rect.midbottom)
             screen.blit(mask_surf, draw_pos)
 

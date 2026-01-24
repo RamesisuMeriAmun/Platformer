@@ -1,3 +1,4 @@
+import os
 import pygame
 import sys
 from Ui import options
@@ -7,10 +8,20 @@ from Skripte.constants import WIDTH, HEIGHT
 
 
 class GameMenu:
-    def __init__(self, width=WIDTH, height=HEIGHT):
-        self.width = width
-        self.height = height
-        self.screen = pygame.display.set_mode((width, height))
+    def __init__(self):
+        os.environ["SDL_VIDEO_WINDOW_POS"] = "center"
+        settings_page = options.SettingsPage()
+        settings = settings_page.get_settings()
+        if settings and settings.get("fullscreen", False):
+            self.screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
+            self.width = WIDTH
+            self.height = HEIGHT
+        else:
+            self.screen = pygame.display.set_mode(
+                (WIDTH // 2, HEIGHT // 2), pygame.RESIZABLE
+            )
+            self.width = WIDTH // 2
+            self.height = HEIGHT // 2
         pygame.display.set_caption("Game Menu")
         self.clock = pygame.time.Clock()
         self.font_large = pygame.font.Font(None, 72)
@@ -65,6 +76,11 @@ class GameMenu:
                 self.running = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 self.handle_click(event.pos)
+            elif event.type == pygame.VIDEORESIZE:
+                self.width, self.height = event.size
+                self.screen = pygame.display.set_mode(
+                    (self.width, self.height), pygame.RESIZABLE
+                )
 
     def handle_click(self, pos):
         for button in self.buttons:
