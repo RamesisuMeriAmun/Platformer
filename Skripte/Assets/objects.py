@@ -42,11 +42,35 @@ class Trampoline(Object):
         self.mask = pygame.mask.from_surface(self.image)
         self.animation_count = 0
         self.animation_name = "jump"
+        self.is_jumping = False
 
-    def stand_player(self, player):
-        player.rect.bottom = self.rect.top + 36
-        player.landed()
-        player.jump_count = 0
+    def trigger(self, player):
+        player.rect.bottom = self.rect.top
+        player.y_vel = -player.JUMP_FORCE * 1.4
+        player.on_ground = False
+        player.jump_count = 1
+        player.can_dash = True
+
+        if not self.is_jumping:
+            self.animation_name = "Jump (28x28)"
+            self.animation_count = 0
+            self.is_jumping = True
+
+    def loop(self):
+        sprites = self.trampoline.get(self.animation_name, [])
+        if not sprites:
+            return
+
+        idx = (self.animation_count // ANIMATION_DELAY) % len(sprites)
+        self.image = sprites[idx]
+        self.animation_count += 1
+
+        if self.is_jumping and idx == len(sprites) - 1:
+            self.is_jumping = False
+            self.animation_name = "Idle"
+            self.animation_count = 0
+
+        self.mask = pygame.mask.from_surface(self.image)
 
 
 class Checkpoint(Object):
@@ -85,7 +109,7 @@ class Spikes(Object):
 OBJECTS_EDITOR_TILE_MAPPING = {
     "Fire": {"class": Fire, "width": 16, "height": 32, "auto_on": True},
     "Lava": {"class": Lava, "width": 96, "height": 20},
-    "Trampoline": {"class": Trampoline, "width": 28, "height": 28},
+    "Trampoline": {"class": Trampoline, "width": 28, "height": 28, "hitbox_data": (0, 20, 28, 8)},
     "Checkpoint": {"class": Checkpoint, "width": 64, "height": 64},
     "Spikes": {"class": Spikes, "width": 16, "height": 16, "hitbox_data": (0, 8, 16, 8)},
 }

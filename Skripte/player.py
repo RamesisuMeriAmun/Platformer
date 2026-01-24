@@ -270,16 +270,19 @@ class Player(pygame.sprite.Sprite):
                 overlap_y = obj.rect.y - self.rect.y
 
                 if self.mask.overlap(obj.mask, (overlap_x, overlap_y)):
-                    self.react_to_object(obj.name)
+                    self.react_to_object(obj)
 
     def react_to_object(self, obj):
-        if obj == "spikes":
+        if obj.name == "spikes":
             self.is_alive = False
             self.death()
 
-        if obj == "lava":
+        if obj.name == "lava":
             self.is_alive = False
             self.death()
+
+        if obj.name == "trampoline":
+            obj.trigger(self)
 
     def death(self):
         if not self.is_alive:

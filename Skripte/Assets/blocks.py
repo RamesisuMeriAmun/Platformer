@@ -8,15 +8,30 @@ IMAGE_DIR = os.path.join(BASE_DIR, "Data", "Images")
 
 
 class Block(Object):
-    BLOCKS_EDITOR_TILE_MAPPING = {
+    BLOCKS_EDITOR_TILE_MAPPING = {  # Name im Editor: (Dateipfad im Images-Ordner, (x, y, Breite, Höhe)
+        # Test
         "Braune Erde": ("Terrain/Terrain.png", (96, 64, 48, 48)),
         "Holz": ("Terrain/Terrain.png", (0, 64, 48, 48)),
-        "Busch": ("Terrain/Terrain.png", (0, 64*2, 48, 48)),
+        "Busch": ("Terrain/Terrain.png", (0, 64 * 2, 48, 48)),
         "Stein": ("Terrain/Terrain.png", (0, 0, 48, 48)),
 
         "Graß": ("Terrain/Sand Mud Ice.png", (64, 0, 48, 48)),
-        "Ice": ("Terrain/Sand Mud Ice.png", (64*2, 0, 48, 48)),
+        "Ice": ("Terrain/Sand Mud Ice.png", (64 * 2, 0, 48, 48)),
         "Sand": ("Terrain/Sand Mud Ice.png", (0, 0, 48, 48)),
+
+        # Moon
+        "Moon Top Left": ("Terrain/Moon.png", (0, 0, 48, 48)),
+        "Moon Top Middle Left": ("Terrain/Moon.png", (48, 0, 48, 48)),
+        "Moon Top Middle Right": ("Terrain/Moon.png", (96, 0, 48, 48)),
+        "Moon Top Right": ("Terrain/Moon.png", (144, 0, 48, 48)),
+        "Moon Middle Left Left": ("Terrain/Moon.png", (0, 48, 48, 48)),
+        "Moon Middle Left": ("Terrain/Moon.png", (48, 48, 48, 48)),
+        "Moon Middle Right": ("Terrain/Moon.png", (96, 48, 48, 48)),
+        "Moon Middle Right Right": ("Terrain/Moon.png", (144, 48, 48, 48)),
+        "Moon Bottom Left": ("Terrain/Moon.png", (0, 96, 48, 48)),
+        "Moon Bottom Middle Left": ("Terrain/Moon.png", (48, 96, 48, 48)),
+        "Moon Bottom Middle Right": ("Terrain/Moon.png", (96, 96, 48, 48)),
+        "Moon Bottom Right": ("Terrain/Moon.png", (144, 96, 48, 48)),
     }
 
     def __init__(self, x, y, block_type="Block1"):
