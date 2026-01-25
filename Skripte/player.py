@@ -176,13 +176,14 @@ class Player(pygame.sprite.Sprite):
                 and self.y_vel < 0
                 and self.jump_hold_time < self.MAX_JUMP_HOLD
                 and self.jump_count
-                == 0  # Korrektur: Muss jump_count 1 sein beim Halten
+                == 0
             ):
                 self.y_vel -= self.JUMP_HOLD_FORCE
                 self.jump_hold_time += 1
 
             if not keys[self.key_jump] and self.y_vel < 0:
-                self.y_vel *= 0.35
+                if self.jump_hold_time < self.MAX_JUMP_HOLD:
+                    self.y_vel *= 0.35
 
     def check_grounded(self):
         floor_rect = pygame.Rect(self.rect.x, self.rect.bottom, self.rect.width, 2)
@@ -296,7 +297,30 @@ class Player(pygame.sprite.Sprite):
             self.death()
 
         if obj.name == "trampoline":
-            obj.trigger(self)
+            if self.y_vel >= 0:
+                obj.trigger(self)
+                self.jump_count = 1
+                self.jump_hold_time = self.MAX_JUMP_HOLD
+
+                self.rect.bottom = obj.rect.top
+            else:
+                if self.x_vel > 0 and self.rect.right > obj.rect.left:
+                    self.rect.right = obj.rect.left
+                elif self.x_vel < 0 and self.rect.left < obj.rect.right:
+                    self.rect.left = obj.rect.right
+
+        if obj.name == "wall_trampoline":
+            overlap_x = obj.rect.x - self.rect.x
+            overlap_y = obj.rect.y - self.rect.y
+
+            if self.mask.overlap(obj.mask, (overlap_x, overlap_y)):
+                if self.wall_jump_timer <= 0:
+                    obj.trigger(self)
+                    return
+            else:
+                if self.y_vel > 0 and self.rect.bottom > obj.rect.top > self.rect.top:
+                    self.rect.bottom = obj.rect.top
+                    self.landed()
 
     def death(self):
         if not self.is_alive:
