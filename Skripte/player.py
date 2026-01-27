@@ -71,7 +71,6 @@ class Player(pygame.sprite.Sprite):
         self.hit = False
 
     # Movement
-
     def handle_input(self):
         keys = pygame.key.get_pressed()
         mouse = pygame.mouse.get_pressed()
@@ -172,11 +171,11 @@ class Player(pygame.sprite.Sprite):
 
         if not self.is_pogoing:
             if (
-                keys[self.key_jump]
-                and self.y_vel < 0
-                and self.jump_hold_time < self.MAX_JUMP_HOLD
-                and self.jump_count
-                == 0
+                    keys[self.key_jump]
+                    and self.y_vel < 0
+                    and self.jump_hold_time < self.MAX_JUMP_HOLD
+                    and self.jump_count
+                    == 0
             ):
                 self.y_vel -= self.JUMP_HOLD_FORCE
                 self.jump_hold_time += 1
@@ -297,30 +296,14 @@ class Player(pygame.sprite.Sprite):
             self.death()
 
         if obj.name == "trampoline":
-            if self.y_vel >= 0:
-                obj.trigger(self)
-                self.jump_count = 1
-                self.jump_hold_time = self.MAX_JUMP_HOLD
-
-                self.rect.bottom = obj.rect.top
-            else:
-                if self.x_vel > 0 and self.rect.right > obj.rect.left:
-                    self.rect.right = obj.rect.left
-                elif self.x_vel < 0 and self.rect.left < obj.rect.right:
-                    self.rect.left = obj.rect.right
+            obj.trigger(self)
+            self.jump_count = 1
+            self.jump_hold_time = self.MAX_JUMP_HOLD
 
         if obj.name == "wall_trampoline":
-            overlap_x = obj.rect.x - self.rect.x
-            overlap_y = obj.rect.y - self.rect.y
-
-            if self.mask.overlap(obj.mask, (overlap_x, overlap_y)):
-                if self.wall_jump_timer <= 0:
-                    obj.trigger(self)
-                    return
-            else:
-                if self.y_vel > 0 and self.rect.bottom > obj.rect.top > self.rect.top:
-                    self.rect.bottom = obj.rect.top
-                    self.landed()
+            obj.trigger(self)
+            self.jump_count = 1
+            self.jump_hold_time = self.MAX_JUMP_HOLD
 
     def death(self):
         if not self.is_alive:
@@ -389,8 +372,8 @@ class Player(pygame.sprite.Sprite):
                 self.rect.y = self.auto_dash_target_y
 
             if (
-                self.rect.x == self.auto_dash_target_x
-                and self.rect.y == self.auto_dash_target_y
+                    self.rect.x == self.auto_dash_target_x
+                    and self.rect.y == self.auto_dash_target_y
             ):
                 self.auto_dashing = False
                 self.dashing = False  # Setzt auch den normalen Dash zurück

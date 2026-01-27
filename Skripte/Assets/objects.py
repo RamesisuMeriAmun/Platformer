@@ -107,7 +107,6 @@ class Spikes(Object):
 
 class WallTrampoline(Object):
     def __init__(self, x, y, width, height, side="left", hitbox_data=None):
-        # side="left" -> hängt an der LINKEN Wand, schießt nach RECHTS
         super().__init__(x, y, width, height, "wall_trampoline", hitbox_data)
         self.side = side
         self.trampoline_sheets = load_sprite_sheets("Traps", "Trampoline", width, height)
@@ -127,13 +126,11 @@ class WallTrampoline(Object):
         launch_force_y = -6
 
         if self.side == "left":
-            player.direction = "right"
-            player.x_vel = launch_force_x
-            player.rect.left = self.rect.right
-        else:
             player.direction = "left"
             player.x_vel = -launch_force_x
-            player.rect.right = self.rect.left
+        else:
+            player.direction = "right"
+            player.x_vel = launch_force_x
 
         player.y_vel = launch_force_y
         player.on_ground = False
