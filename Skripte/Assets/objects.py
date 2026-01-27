@@ -160,8 +160,9 @@ class WallTrampoline(Object):
 OBJECTS_EDITOR_TILE_MAPPING = {
     "Fire": {"class": Fire, "width": 16, "height": 32, "auto_on": True},
     "Lava": {"class": Lava, "width": 96, "height": 20},
-    "Trampoline": {"class": Trampoline, "width": 28, "height": 28, "hitbox_data": (0, 20, 28, 8)},
+    "Trampoline": {"class": Trampoline, "width": 28, "height": 28},
     "Checkpoint": {"class": Checkpoint, "width": 64, "height": 64},
     "Spikes": {"class": Spikes, "width": 16, "height": 16, "hitbox_data": (0, 8, 16, 8)},
-    "Wall Trampoline": {"class": WallTrampoline, "width": 28, "height": 28, "hitbox_data": (8, 0, 8, 28)}
+    "Wall Trampoline Left": {"class": WallTrampoline, "width": 28, "height": 28, "extra_args": {"side": "left"}},
+    "Wall Trampoline Right": {"class": WallTrampoline, "width": 28, "height": 28, "extra_args": {"side": "right"}},
 }

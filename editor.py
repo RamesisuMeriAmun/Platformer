@@ -51,7 +51,9 @@ class LevelEditor:
             cls = params["class"]
             width = params.get("width", 32)
             height = params.get("height", 32)
-            surf = cls(0, 0, width, height).image
+            hitbox = params.get("hitbox_data")
+            extra_args = params.get("extra_args", {})
+            surf = cls(0, 0, width, height, hitbox_data=hitbox, **extra_args).image
             self.assets[name] = surf
 
         self.tile_list = list(self.assets.keys())
@@ -68,7 +70,9 @@ class LevelEditor:
             cls = params["class"]
             width = params.get("width", 32)
             height = params.get("height", 32)
-            obj = cls(x, y, width, height)
+            hitbox = params.get("hitbox_data")
+            extra_args = params.get("extra_args", {})
+            obj = cls(x, y, width, height, hitbox_data=hitbox, **extra_args)
             if params.get("auto_on"):
                 obj.on()
             return obj

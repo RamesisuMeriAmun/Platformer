@@ -56,7 +56,10 @@ def load_level(filename):
                 cls = params["class"]
                 width = params.get("width")
                 height = params.get("height")
-                obj = cls(pos[0], pos[1], width, height)
+                hitbox = params.get("hitbox_data")
+                extra_args = params.get("extra_args", {})
+
+                obj = cls(pos[0], pos[1], width, height, hitbox_data=hitbox, **extra_args)
 
                 if params.get("auto_on") and hasattr(obj, "on"):
                     obj.on()
