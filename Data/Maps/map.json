@@ -205,17 +205,17 @@
                     ]
                 },
                 {
-                    "type": "Wall Trampoline",
+                    "type": "Wall Trampoline Left",
                     "pos": [
                         740.0,
                         87.0
                     ]
                 },
                 {
-                    "type": "Wall Trampoline",
+                    "type": "Wall Trampoline Right",
                     "pos": [
-                        547.0,
-                        146.0
+                        574.0,
+                        89.0
                     ]
                 }
             ]
