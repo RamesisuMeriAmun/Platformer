@@ -162,7 +162,7 @@ OBJECTS_EDITOR_TILE_MAPPING = {
     "Lava": {"class": Lava, "width": 96, "height": 20},
     "Trampoline": {"class": Trampoline, "width": 28, "height": 28},
     "Checkpoint": {"class": Checkpoint, "width": 64, "height": 64},
-    "Spikes": {"class": Spikes, "width": 16, "height": 16, "hitbox_data": (0, 8, 16, 8)},
+    "Spikes": {"class": Spikes, "width": 16, "height": 16},
     "Wall Trampoline Left": {"class": WallTrampoline, "width": 28, "height": 28, "extra_args": {"side": "left"}},
     "Wall Trampoline Right": {"class": WallTrampoline, "width": 28, "height": 28, "extra_args": {"side": "right"}},
 }
