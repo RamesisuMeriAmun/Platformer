@@ -4,12 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fd6eb8d8-aec6-4497-99e9-f308bf5af605" name="Changes" comment="">
+    <list default="true" id="fd6eb8d8-aec6-4497-99e9-f308bf5af605" name="Changes" comment="Kamera für resize gefixt">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/GameSave/savefile.json" beforeDir="false" afterPath="$PROJECT_DIR$/Data/GameSave/savefile.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Skripte/Assets/objects.py" beforeDir="false" afterPath="$PROJECT_DIR$/Skripte/Assets/objects.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Skripte/camera.py" beforeDir="false" afterPath="$PROJECT_DIR$/Skripte/camera.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Skripte/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/Skripte/game.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,6 +42,18 @@
       <option name="presentableId" value="Default" />
       <updated>1768254195763</updated>
     </task>
+    <task id="LOCAL-00001" summary="Kamera für resize gefixt">
+      <created>1771181077117</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1771181077117</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Kamera für resize gefixt" />
+    <option name="LAST_COMMIT_MESSAGE" value="Kamera für resize gefixt" />
   </component>
 </project>
