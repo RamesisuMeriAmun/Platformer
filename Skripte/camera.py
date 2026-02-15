@@ -58,5 +58,11 @@ class Camera:
         self.offset.x = max(room.rect.left, min(target_x, room.rect.right - self.width))
         self.offset.y = max(room.rect.top, min(target_y, room.rect.bottom - self.height))
 
+    def resize(self, new_width, new_height):
+        self.width = new_width
+        self.height = new_height
+        self.camera_box.x = (self.width - self.camera_box_width) // 2 + self.horizontal_bias
+        self.camera_box.y = (self.height - self.camera_box_height) // 2 + self.vertical_bias
+
     def draw_debug(self, screen):
         pygame.draw.rect(screen, (0, 255, 0), self.camera_box, 2)

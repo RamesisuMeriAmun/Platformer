@@ -29,7 +29,9 @@ class Game:
             )
 
         self.clock = pygame.time.Clock()
-        self.camera = Camera(constants.WIDTH, constants.HEIGHT)
+
+        curr_w, curr_h = self.screen.get_size()
+        self.camera = Camera(curr_w, curr_h)
         self.room = None
 
         self.active_rooms = []
@@ -290,6 +292,8 @@ class Game:
                         self.screen = pygame.display.set_mode(
                             (self.width, self.height), pygame.RESIZABLE
                         )
+                        self.camera.resize(self.width, self.height)
+
                     # Debug
                     if event.key == pygame.K_F3:
                         self.debug = not self.debug
