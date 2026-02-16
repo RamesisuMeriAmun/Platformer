@@ -32,6 +32,23 @@ class Block(Object):
         "Moon Bottom Middle Left": ("Terrain/Moon.png", (48, 96, 48, 48)),
         "Moon Bottom Middle Right": ("Terrain/Moon.png", (96, 96, 48, 48)),
         "Moon Bottom Right": ("Terrain/Moon.png", (144, 96, 48, 48)),
+        "Moon Top Right Corner": ("Terrain/Moon.png", (240, 0, 48, 48)),
+        "Moon Top Left Corner": ("Terrain/Moon.png", (288, 0, 48, 48)),
+        "Moon Bottom Left Corner": ("Terrain/Moon.png", (240, 48, 48, 48)),
+        "Moon Bottom Right Corner": ("Terrain/Moon.png", (288, 48, 48, 48)),
+        "Moon Top Middle_1": ("Terrain/Moon.png", (0, 192, 48, 48)),
+        "Moon Top Middle_2": ("Terrain/Moon.png", (48, 192, 48, 48)),
+        "Moon Bottom Middle_1": ("Terrain/Moon.png", (96, 192, 48, 48)),
+        "Moon Bottom Middle_2": ("Terrain/Moon.png", (144, 192, 48, 48)),
+        "Moon Right Middle": ("Terrain/Moon.png", (192, 192, 48, 48)),
+        "Moon Left Middle": ("Terrain/Moon.png", (240, 192, 48, 48)),
+        "Moon Center_1": ("Terrain/Moon.png", (288, 192, 48, 48)),
+        "Moon Center_2": ("Terrain/Moon.png", (192, 96, 48, 48)),
+        "Moon Center_3": ("Terrain/Moon.png", (240, 96, 48, 48)),
+        "Moon Center_4": ("Terrain/Moon.png", (288, 96, 48, 48)),
+        "Moon Center_5": ("Terrain/Moon.png", (192, 144, 48, 48)),
+        "Moon Center_6": ("Terrain/Moon.png", (240, 144, 48, 48)),
+        "Moon Center_7": ("Terrain/Moon.png", (288, 144, 48, 48)),
     }
 
     def __init__(self, x, y, block_type="Block1"):
