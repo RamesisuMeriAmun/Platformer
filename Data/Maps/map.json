@@ -1,10 +1,10 @@
 {
     "global_background": [
         {
-            "type": "Mond",
+            "type": "Sonne",
             "pos": [
-                288.0,
-                75.0
+                284.0,
+                68.0
             ],
             "layer": 4
         }

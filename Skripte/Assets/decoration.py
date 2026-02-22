@@ -11,7 +11,7 @@ class Decoration(Object):
     DECORATION_TILE_MAPPING = {
         "Busch": ("Terrain/Terrain.png", (0, 128, 48, 48), 64, 64),
         "Mond": ("Background/Moons.png", (0, 0, 128, 128), 128, 128),
-        "Deko_Wolke": ("Items/Decorations/Clouds.png", (0, 0, 64, 64), 128, 70),
+        "Sonne": ("Background/Moons.png", (128, 0, 128, 128), 128, 128),
     }
 
     def __init__(self, x, y, deco_type):
