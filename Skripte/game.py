@@ -8,6 +8,7 @@ import Skripte.constants as constants
 from Skripte.Assets import background
 from Skripte import player, level
 from Skripte.camera import Camera
+from Skripte.Assets.background import BackgroundManager
 import Ui.options as options
 import Ui.game_menu as game_menu
 
@@ -37,11 +38,10 @@ class Game:
         self.active_rooms = []
 
         self.current_bg_name = "Gray.png"
-        self.background, self.bg_image = background.load_background(
-            self.current_bg_name, constants.WIDTH, constants.HEIGHT
-        )
 
-        self.objects = level.load_level("map.json")
+        self.background_manager = BackgroundManager()
+
+        self.objects, self.global_decorations = level.load_level("map.json")
         self.player = player.Player(100, 100, 20, 25)
 
         #  Debugging
@@ -109,23 +109,30 @@ class Game:
 
         if self.room:
             self.camera.update(self.player, self.room)
-            ox = int(self.camera.offset.x)
-            oy = int(self.camera.offset.y)
+            cam_off = self.camera.offset
+            self.background_manager.draw_layer(self.screen, self.global_decorations, cam_off, 4)
 
-            for tile in self.background:
-                draw_x = tile[0] + self.room.rect.x - ox
-                draw_y = tile[1] + self.room.rect.y - oy
-                self.screen.blit(self.bg_image, (draw_x, draw_y))
+            # 2. Parallax Hintergrund-Layer (3, 2, 1)
+            self.background_manager.draw_layer(self.screen, self.room.layer_3, cam_off, 3)
+            self.background_manager.draw_layer(self.screen, self.room.layer_2, cam_off, 2)
+            self.background_manager.draw_layer(self.screen, self.room.layer_1, cam_off, 1)
 
+            # 3. Spielebene (Ebene 0)
+            ox, oy = int(cam_off.x), int(cam_off.y)
             for r in self.active_rooms:
                 for block in r.blocks:
                     block.draw(self.screen, ox, oy)
                 for obj in r.objects:
                     obj.draw(self.screen, ox, oy)
+                for deco in r.decorations:
+                    deco.draw(self.screen, ox, oy)
 
-        self.player.draw(
-            self.screen, int(self.camera.offset.x), int(self.camera.offset.y)
-        )
+            # 4. Spieler (Ebene 0)
+        self.player.draw(self.screen, int(self.camera.offset.x), int(self.camera.offset.y))
+
+        # 5. Vordergrund-Layer (Ebene -1)
+        if self.room:
+            self.background_manager.draw_layer(self.screen, self.room.layer_foreground, cam_off, -1)
 
         if self.debug:
             debug_surf = pygame.Surface((constants.WIDTH, constants.HEIGHT))
@@ -328,10 +335,6 @@ class Game:
                         self.player.spawn = room.spawn
 
                         self.update_active_content()
-
-                        self.background, _ = background.load_background(
-                            self.current_bg_name, room.rect.width, room.rect.height
-                        )
 
             self.player.loop()
             if not self.player.is_alive:

@@ -1,16 +1,27 @@
 import pygame
-from os.path import join
 
 
-def load_background(name, target_width, target_height):
-    # Bild laden
-    image = pygame.image.load(join("Data", "Images", "Background", name)).convert()
-    tile_w, tile_h = image.get_size()
-    tiles = []
-    buffer = 25
-    for i in range(-buffer, target_width // tile_w + 1 + buffer):
-        for j in range(-buffer, target_height // tile_h + 1 + buffer):
-            pos = (i * tile_w, j * tile_h)
-            tiles.append(pos)
+class BackgroundManager:
+    def __init__(self):
+        self.factors = {
+            4: 0.01,
+            3: 0.05,
+            2: 0.4,
+            1: 0.7,
+            0: 1.0,
+            -1: 1.3
+        }
 
-    return tiles, image
+    def draw_layer(self, screen, decorations, cam_offset, layer_index):
+        factor = self.factors.get(layer_index, 1.0)
+
+        for deco in decorations:
+            if layer_index == 4:
+
+                off_x = int(cam_offset.x * factor)
+                off_y = int(cam_offset.y * factor)
+                screen.blit(deco.image, (deco.rect.x - off_x, deco.rect.y - off_y))
+            else:
+                off_x = int(cam_offset.x * factor)
+                off_y = int(cam_offset.y * factor)
+                deco.draw(screen, off_x, off_y)
