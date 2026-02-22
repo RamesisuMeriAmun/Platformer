@@ -15,7 +15,7 @@ MAP_DIR = os.path.join(BASE_DIR, "Data", "Maps")
 class LevelEditor:
     def __init__(self):
         pygame.init()
-        self.window = pygame.display.set_mode((WIDTH, HEIGHT))
+        self.window = pygame.display.set_mode((WIDTH // 1.5, HEIGHT // 1.5))
         pygame.display.set_caption(
             "Level Editor - Blöcke & Objekte | Zoom [+/-] | Save [O]"
         )
@@ -32,6 +32,11 @@ class LevelEditor:
         self.room_mode = False
         # Debugging wie im Game
         self.debug = False  # Startet im normalen Modus
+
+        # UI Logik
+        self.show_ui = False
+        self.ui_page = 0
+        self.ui_category = "Blocks"  # "Blocks" oder "Objects"
 
         # Tiles
         self.tilemap = {}  # grid tiles
@@ -58,6 +63,10 @@ class LevelEditor:
 
         self.tile_list = list(self.assets.keys())
         self.current_type_idx = 0
+
+        # UI Kategorisierung
+        self.block_types = [n for n in self.tile_list if n in Block.BLOCKS_EDITOR_TILE_MAPPING]
+        self.object_types = [n for n in self.tile_list if n in o.OBJECTS_EDITOR_TILE_MAPPING]
 
     @staticmethod
     def create_object(typ, x, y):
@@ -136,6 +145,28 @@ class LevelEditor:
             for item in r_data.get("offgrid", []):
                 self.offgrid_tiles.append(item)
 
+    # UI Zeichnen
+    def draw_ui(self):
+        if not self.show_ui: return
+        overlay = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
+        overlay.fill((0, 0, 0, 200))
+        self.window.blit(overlay, (0, 0))
+
+        items = self.block_types if self.ui_category == "Blocks" else self.object_types
+        page_size = 20
+        start = self.ui_page * page_size
+        for i, name in enumerate(items[start:start + page_size]):
+            x, y = 100 + (i % 5) * 120, 100 + (i // 5) * 120
+            if self.tile_list[self.current_type_idx] == name:
+                pygame.draw.rect(self.window, (255, 255, 0), (x - 5, y - 5, 74, 74), 2)
+            self.window.blit(pygame.transform.scale(self.assets[name], (64, 64)), (x, y))
+            self.window.blit(self.font.render(name[:10], True, (255, 255, 255)), (x, y + 70))
+
+        # Max Seiten für Anzeige berechnen
+        max_pages = max(1, (len(items) + page_size - 1) // page_size)
+        header = f"UI: {self.ui_category} | Seite {self.ui_page + 1}/{max_pages} | [TAB] Wechseln"
+        self.window.blit(self.font.render(header, True, (255, 255, 0)), (100, 50))
+
     def run(self):
         run = True
         while run:
@@ -144,10 +175,11 @@ class LevelEditor:
             # Kontinuierliche Abfrage fuer flüssige Kamera-Bewegung
             keys = pygame.key.get_pressed()
             speed = 15 / self.zoom
-            if keys[pygame.K_a]: self.scroll[0] -= speed
-            if keys[pygame.K_d]: self.scroll[0] += speed
-            if keys[pygame.K_w]: self.scroll[1] -= speed
-            if keys[pygame.K_s]: self.scroll[1] += speed
+            if not self.show_ui:
+                if keys[pygame.K_a]: self.scroll[0] -= speed
+                if keys[pygame.K_d]: self.scroll[0] += speed
+                if keys[pygame.K_w]: self.scroll[1] -= speed
+                if keys[pygame.K_s]: self.scroll[1] += speed
 
             # Mausposition
             mpos = pygame.mouse.get_pos()
@@ -249,10 +281,10 @@ class LevelEditor:
                      curr_rect[3] * self.zoom), 1
                 )
 
-            if not self.room_mode:
+            if not self.room_mode and not self.show_ui:
                 p_img = self.assets[current_selection]
                 preview = pygame.transform.scale(p_img, (
-                int(p_img.get_width() * self.zoom), int(p_img.get_height() * self.zoom)))
+                    int(p_img.get_width() * self.zoom), int(p_img.get_height() * self.zoom)))
                 preview.set_alpha(150)
                 if self.ongrid:
                     self.window.blit(preview, ((grid_x * BLOCK_SIZE - self.scroll[0]) * self.zoom,
@@ -260,10 +292,13 @@ class LevelEditor:
                 else:
                     self.window.blit(preview, mpos)
 
+            # UI Zeichnen
+            self.draw_ui()
+
             #  UI: Status & Debug Help
             mode_str = "ROOM-MODE" if self.room_mode else "TILE-MODE"
 
-            info = self.font.render(f"{mode_str} | {current_selection} | Zoom: {int(self.zoom * 100)}%", True,
+            info = self.font.render(f"{mode_str} | {current_selection} | Zoom: {int(self.zoom * 100)}% | [U] UI", True,
                                     (255, 255, 255))
             self.window.blit(info, (10, 10))
 
@@ -280,7 +315,7 @@ class LevelEditor:
                 for i, text in enumerate(editor_help):
                     h_img = self.font.render(text, True, (255, 215, 0) if i == 0 else (200, 200, 200))
                     x_pos = WIDTH - h_img.get_width() - 20
-                    self.window.blit(h_img, (x_pos, 10 + i * 20))
+                    self.window.blit(h_img, (10, 40 + i * 20))
             else:
                 hint = self.font.render("Press F3 for Debug Info", True, (100, 100, 100))
                 self.window.blit(hint, (WIDTH - hint.get_width() - 20, 10))
@@ -291,32 +326,41 @@ class LevelEditor:
                     run = False
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.button == 1:
-                        if self.room_mode and pygame.key.get_mods() & pygame.KMOD_CTRL:
-                            snap_x = (world_x // BLOCK_SIZE) * BLOCK_SIZE
-                            snap_y = (world_y // BLOCK_SIZE) * BLOCK_SIZE
-                            self.room_start_pos = (snap_x, snap_y)
-                        elif not self.room_mode:
-                            if self.ongrid:
-                                self.tilemap[tile_loc] = current_selection
-                            else:
-                                self.offgrid_tiles.append({"type": current_selection, "pos": [world_x, world_y]})
+                    if self.show_ui and event.button == 1:
+                        items = self.block_types if self.ui_category == "Blocks" else self.object_types
+                        start = self.ui_page * 20
+                        for i, name in enumerate(items[start:start + 20]):
+                            ix, iy = 100 + (i % 5) * 120, 100 + (i // 5) * 120
+                            if pygame.Rect(ix, iy, 64, 64).collidepoint(mpos):
+                                self.current_type_idx = self.tile_list.index(name)
+                                self.show_ui = False
+                    elif not self.show_ui:
+                        if event.button == 1:
+                            if self.room_mode and pygame.key.get_mods() & pygame.KMOD_CTRL:
+                                snap_x = (world_x // BLOCK_SIZE) * BLOCK_SIZE
+                                snap_y = (world_y // BLOCK_SIZE) * BLOCK_SIZE
+                                self.room_start_pos = (snap_x, snap_y)
+                            elif not self.room_mode:
+                                if self.ongrid:
+                                    self.tilemap[tile_loc] = current_selection
+                                else:
+                                    self.offgrid_tiles.append({"type": current_selection, "pos": [world_x, world_y]})
 
-                    if event.button == 3:
-                        if self.room_mode:
-                            for room in self.rooms_list[::-1]:
-                                if pygame.Rect(room["rect"]).collidepoint(world_x, world_y):
-                                    self.rooms_list.remove(room)
-                                    break
-                        else:
-                            if self.ongrid and tile_loc in self.tilemap:
-                                del self.tilemap[tile_loc]
+                        if event.button == 3:
+                            if self.room_mode:
+                                for room in self.rooms_list[::-1]:
+                                    if pygame.Rect(room["rect"]).collidepoint(world_x, world_y):
+                                        self.rooms_list.remove(room)
+                                        break
                             else:
-                                for tile in self.offgrid_tiles[::-1]:
-                                    rect = pygame.Rect(tile["pos"][0], tile["pos"][1],
-                                                       self.assets[tile["type"]].get_width(),
-                                                       self.assets[tile["type"]].get_height())
-                                    if rect.collidepoint(world_x, world_y): self.offgrid_tiles.remove(tile); break
+                                if self.ongrid and tile_loc in self.tilemap:
+                                    del self.tilemap[tile_loc]
+                                else:
+                                    for tile in self.offgrid_tiles[::-1]:
+                                        rect = pygame.Rect(tile["pos"][0], tile["pos"][1],
+                                                           self.assets[tile["type"]].get_width(),
+                                                           self.assets[tile["type"]].get_height())
+                                        if rect.collidepoint(world_x, world_y): self.offgrid_tiles.remove(tile); break
 
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1 and self.room_start_pos:
@@ -342,6 +386,22 @@ class LevelEditor:
                         self.current_type_idx = (self.current_type_idx - event.y) % len(self.tile_list)
 
                 if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_u:
+                        self.show_ui = not self.show_ui
+                        self.ui_page = 0
+                    if self.show_ui:
+                        # Modulo Blätter-Logik
+                        items = self.block_types if self.ui_category == "Blocks" else self.object_types
+                        max_pages = max(1, (len(items) + 19) // 20)
+
+                        if event.key == pygame.K_TAB:
+                            self.ui_category = "Objects" if self.ui_category == "Blocks" else "Blocks"
+                            self.ui_page = 0
+                        if event.key == pygame.K_RIGHT:
+                            self.ui_page = (self.ui_page + 1) % max_pages
+                        if event.key == pygame.K_LEFT:
+                            self.ui_page = (self.ui_page - 1) % max_pages
+
                     if event.key == pygame.K_F3:  # Debug einschalten
                         self.debug = not self.debug
                     if event.key == pygame.K_p and self.room_mode:
