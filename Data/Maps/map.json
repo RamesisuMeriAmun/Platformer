@@ -1,10 +1,10 @@
 {
     "global_background": [
         {
-            "type": "Deko_Busch",
+            "type": "Mond",
             "pos": [
-                337.0,
-                99.0
+                288.0,
+                75.0
             ],
             "layer": 4
         }
@@ -180,10 +180,6 @@
                     "layer": 0
                 },
                 "13;5": {
-                    "type": "Moon Top Middle Left",
-                    "layer": 0
-                },
-                "12;5": {
                     "type": "Moon Top Middle Left",
                     "layer": 0
                 },
@@ -640,8 +636,12 @@
                     "layer": 0
                 },
                 "10;1": {
-                    "type": "Deko_Busch",
+                    "type": "Busch",
                     "layer": 3
+                },
+                "12;5": {
+                    "type": "Moon Top Middle Left",
+                    "layer": 0
                 }
             },
             "offgrid": [
@@ -697,14 +697,7 @@
             ],
             "decorations": [
                 {
-                    "type": "Deko_Mondstein",
-                    "pos": [
-                        528,
-                        192
-                    ]
-                },
-                {
-                    "type": "Deko_Busch",
+                    "type": "Busch",
                     "pos": [
                         378.0,
                         95.0
@@ -712,7 +705,7 @@
                     "layer": 0
                 },
                 {
-                    "type": "Deko_Busch",
+                    "type": "Busch",
                     "pos": [
                         389.0,
                         178.0
@@ -720,7 +713,7 @@
                     "layer": -1
                 },
                 {
-                    "type": "Deko_Busch",
+                    "type": "Busch",
                     "pos": [
                         621.0,
                         127.0

@@ -9,8 +9,8 @@ IMAGE_DIR = os.path.join(BASE_DIR, "Data", "Images")
 class Decoration(Object):
     # Name : (Dateipfad, (x, y, w, h), Ziel_Breite, Ziel_Höhe)
     DECORATION_TILE_MAPPING = {
-        "Deko_Busch": ("Terrain/Terrain.png", (0, 128, 48, 48), 64, 64),
-        "Deko_Mondstein": ("Terrain/Moon.png", (192, 96, 48, 48), 48, 48),
+        "Busch": ("Terrain/Terrain.png", (0, 128, 48, 48), 64, 64),
+        "Mond": ("Background/Moons.png", (0, 0, 128, 128), 128, 128),
         "Deko_Wolke": ("Items/Decorations/Clouds.png", (0, 0, 64, 64), 128, 70),
     }
 

@@ -6,10 +6,10 @@ class BackgroundManager:
         self.factors = {
             4: 0.01,
             3: 0.05,
-            2: 0.4,
-            1: 0.7,
+            2: 0.2,
+            1: 0.5,
             0: 1.0,
-            -1: 1.3
+            -1: 1.2
         }
 
     def draw_layer(self, screen, decorations, cam_offset, layer_index):
