@@ -1,4 +1,14 @@
 {
+    "global_background": [
+        {
+            "type": "Deko_Busch",
+            "pos": [
+                337.0,
+                99.0
+            ],
+            "layer": 4
+        }
+    ],
     "rooms": [
         {
             "rect": [
@@ -13,160 +23,626 @@
                 203.99999999999991
             ],
             "grid": {
-                "0;10": "Moon Bottom Left",
-                "1;10": "Moon Bottom Middle Left",
-                "3;10": "Moon Bottom Middle Left",
-                "2;10": "Moon Bottom Middle Right",
-                "4;10": "Moon Bottom Middle Left",
-                "5;10": "Moon Bottom Middle Left",
-                "6;10": "Moon Bottom Middle Left",
-                "7;10": "Moon Bottom Middle Left",
-                "8;10": "Moon Bottom Middle Right",
-                "9;10": "Moon Bottom Middle Right",
-                "10;10": "Moon Bottom Middle Left",
-                "11;10": "Moon Bottom Middle Left",
-                "12;10": "Moon Bottom Middle Left",
-                "13;10": "Moon Bottom Middle Right",
-                "14;10": "Moon Bottom Middle Left",
-                "16;10": "Moon Bottom Middle Left",
-                "17;10": "Moon Bottom Middle Left",
-                "18;10": "Moon Bottom Middle Right",
-                "15;10": "Moon Bottom Middle Left",
-                "19;10": "Moon Bottom Middle Left",
-                "20;10": "Moon Bottom Middle Left",
-                "21;10": "Moon Bottom Middle Left",
-                "22;10": "Moon Bottom Middle Right",
-                "23;10": "Moon Bottom Middle Right",
-                "24;10": "Moon Bottom Right",
-                "24;9": "Moon Middle Right Right",
-                "24;8": "Moon Right Middle",
-                "24;7": "Moon Right Middle",
-                "24;6": "Moon Top Right",
-                "16;4": "Moon Middle Left Left",
-                "16;3": "Moon Left Middle",
-                "16;2": "Moon Middle Left Left",
-                "18;2": "Moon Right Middle",
-                "18;3": "Moon Right Middle",
-                "18;4": "Moon Middle Right Right",
-                "18;5": "Moon Middle Right Right",
-                "18;6": "Moon Top Right Corner",
-                "23;6": "Moon Top Middle_2",
-                "15;5": "Moon Top Middle Right",
-                "13;5": "Moon Top Middle Left",
-                "12;5": "Moon Top Middle Left",
-                "14;5": "Moon Top Middle Right",
-                "11;5": "Moon Top Middle Right",
-                "10;5": "Moon Top Middle Right",
-                "9;5": "Moon Top Middle Right",
-                "8;5": "Moon Top Middle Left",
-                "7;5": "Moon Top Middle Right",
-                "6;5": "Moon Top Middle_2",
-                "5;5": "Moon Top Middle Right",
-                "4;5": "Moon Top Middle Left",
-                "3;5": "Moon Top Middle Right",
-                "2;5": "Moon Top Middle Right",
-                "1;5": "Moon Top Middle Right",
-                "0;6": "Moon Middle Left Left",
-                "0;7": "Moon Left Middle",
-                "0;8": "Moon Left Middle",
-                "0;9": "Moon Middle Left Left",
-                "0;5": "Moon Top Left",
-                "16;5": "Moon Top Left Corner",
-                "16;6": "Moon Center_3",
-                "1;6": "Moon Middle Left",
-                "1;7": "Moon Center_6",
-                "1;9": "Moon Middle Right",
-                "2;9": "Moon Center_5",
-                "1;8": "Moon Middle Left",
-                "2;8": "Moon Center_2",
-                "2;6": "Moon Middle Right",
-                "2;7": "Moon Center_7",
-                "3;7": "Moon Center_6",
-                "3;8": "Moon Middle Left",
-                "3;9": "Moon Middle Left",
-                "4;9": "Moon Middle Right",
-                "4;8": "Moon Center_1",
-                "3;6": "Moon Center_7",
-                "4;7": "Moon Center_7",
-                "4;6": "Moon Center_3",
-                "5;7": "Moon Middle Left",
-                "5;8": "Moon Center_6",
-                "5;9": "Moon Middle Left",
-                "6;9": "Moon Middle Left",
-                "6;8": "Moon Center_3",
-                "5;6": "Moon Center_2",
-                "6;6": "Moon Center_7",
-                "6;7": "Moon Middle Right",
-                "7;7": "Moon Center_3",
-                "7;6": "Moon Center_2",
-                "7;8": "Moon Center_7",
-                "7;9": "Moon Center_3",
-                "8;8": "Moon Center_4",
-                "8;7": "Moon Middle Left",
-                "8;6": "Moon Center_2",
-                "8;9": "Moon Center_3",
-                "9;9": "Moon Middle Left",
-                "9;7": "Moon Center_6",
-                "9;6": "Moon Middle Right",
-                "9;8": "Moon Center_4",
-                "10;9": "Moon Center_2",
-                "10;8": "Moon Middle Right",
-                "10;7": "Moon Center_6",
-                "10;6": "Moon Center_2",
-                "11;7": "Moon Center_3",
-                "11;8": "Moon Center_2",
-                "11;9": "Moon Center_6",
-                "12;9": "Moon Center_6",
-                "12;8": "Moon Center_7",
-                "11;6": "Moon Center_7",
-                "13;9": "Moon Middle Left",
-                "13;8": "Moon Center_2",
-                "14;9": "Moon Center_2",
-                "13;7": "Moon Center_3",
-                "12;6": "Moon Center_7",
-                "12;7": "Moon Center_5",
-                "13;6": "Moon Middle Right",
-                "14;7": "Moon Middle Left",
-                "14;8": "Moon Center_2",
-                "15;9": "Moon Center_3",
-                "15;8": "Moon Center_7",
-                "14;6": "Moon Center_1",
-                "15;6": "Moon Middle Right",
-                "15;7": "Moon Center_4",
-                "16;8": "Moon Center_2",
-                "16;9": "Moon Center_7",
-                "17;9": "Moon Middle Left",
-                "18;9": "Moon Middle Right",
-                "23;9": "Moon Middle Left",
-                "22;9": "Moon Middle Right",
-                "21;9": "Moon Center_7",
-                "20;9": "Moon Center_3",
-                "19;9": "Moon Middle Left",
-                "18;8": "Moon Center_2",
-                "17;7": "Moon Center_3",
-                "16;7": "Moon Center_1",
-                "17;8": "Moon Middle Left",
-                "18;7": "Moon Center_6",
-                "20;8": "Moon Center_2",
-                "19;7": "Moon Top Right Corner",
-                "19;8": "Moon Center_6",
-                "21;8": "Moon Center_4",
-                "22;8": "Moon Middle Left",
-                "23;8": "Moon Center_3",
-                "23;7": "Moon Center_3",
-                "17;5": "Moon Center_2",
-                "17;3": "Moon Center_2",
-                "17;2": "Moon Center_7",
-                "17;6": "Moon Middle Left",
-                "17;4": "Moon Center_6",
-                "18;1": "Moon Top Right",
-                "17;1": "Moon Top Middle Left",
-                "16;1": "Moon Top Left",
-                "19;6": "Moon Top Right",
-                "22;6": "Moon Top Left",
-                "20;7": "Moon Top Middle Left",
-                "21;7": "Moon Top Middle Right",
-                "22;7": "Moon Top Left Corner"
+                "0;10": {
+                    "type": "Moon Bottom Left",
+                    "layer": 0
+                },
+                "1;10": {
+                    "type": "Moon Bottom Middle Left",
+                    "layer": 0
+                },
+                "3;10": {
+                    "type": "Moon Bottom Middle Left",
+                    "layer": 0
+                },
+                "2;10": {
+                    "type": "Moon Bottom Middle Right",
+                    "layer": 0
+                },
+                "4;10": {
+                    "type": "Moon Bottom Middle Left",
+                    "layer": 0
+                },
+                "5;10": {
+                    "type": "Moon Bottom Middle Left",
+                    "layer": 0
+                },
+                "6;10": {
+                    "type": "Moon Bottom Middle Left",
+                    "layer": 0
+                },
+                "7;10": {
+                    "type": "Moon Bottom Middle Left",
+                    "layer": 0
+                },
+                "8;10": {
+                    "type": "Moon Bottom Middle Right",
+                    "layer": 0
+                },
+                "9;10": {
+                    "type": "Moon Bottom Middle Right",
+                    "layer": 0
+                },
+                "10;10": {
+                    "type": "Moon Bottom Middle Left",
+                    "layer": 0
+                },
+                "11;10": {
+                    "type": "Moon Bottom Middle Left",
+                    "layer": 0
+                },
+                "12;10": {
+                    "type": "Moon Bottom Middle Left",
+                    "layer": 0
+                },
+                "13;10": {
+                    "type": "Moon Bottom Middle Right",
+                    "layer": 0
+                },
+                "14;10": {
+                    "type": "Moon Bottom Middle Left",
+                    "layer": 0
+                },
+                "16;10": {
+                    "type": "Moon Bottom Middle Left",
+                    "layer": 0
+                },
+                "17;10": {
+                    "type": "Moon Bottom Middle Left",
+                    "layer": 0
+                },
+                "18;10": {
+                    "type": "Moon Bottom Middle Right",
+                    "layer": 0
+                },
+                "15;10": {
+                    "type": "Moon Bottom Middle Left",
+                    "layer": 0
+                },
+                "19;10": {
+                    "type": "Moon Bottom Middle Left",
+                    "layer": 0
+                },
+                "20;10": {
+                    "type": "Moon Bottom Middle Left",
+                    "layer": 0
+                },
+                "21;10": {
+                    "type": "Moon Bottom Middle Left",
+                    "layer": 0
+                },
+                "22;10": {
+                    "type": "Moon Bottom Middle Right",
+                    "layer": 0
+                },
+                "23;10": {
+                    "type": "Moon Bottom Middle Right",
+                    "layer": 0
+                },
+                "24;10": {
+                    "type": "Moon Bottom Right",
+                    "layer": 0
+                },
+                "24;9": {
+                    "type": "Moon Middle Right Right",
+                    "layer": 0
+                },
+                "24;8": {
+                    "type": "Moon Right Middle",
+                    "layer": 0
+                },
+                "24;7": {
+                    "type": "Moon Right Middle",
+                    "layer": 0
+                },
+                "24;6": {
+                    "type": "Moon Top Right",
+                    "layer": 0
+                },
+                "16;4": {
+                    "type": "Moon Middle Left Left",
+                    "layer": 0
+                },
+                "16;3": {
+                    "type": "Moon Left Middle",
+                    "layer": 0
+                },
+                "16;2": {
+                    "type": "Moon Middle Left Left",
+                    "layer": 0
+                },
+                "18;2": {
+                    "type": "Moon Right Middle",
+                    "layer": 0
+                },
+                "18;3": {
+                    "type": "Moon Right Middle",
+                    "layer": 0
+                },
+                "18;4": {
+                    "type": "Moon Middle Right Right",
+                    "layer": 0
+                },
+                "18;5": {
+                    "type": "Moon Middle Right Right",
+                    "layer": 0
+                },
+                "18;6": {
+                    "type": "Moon Top Right Corner",
+                    "layer": 0
+                },
+                "23;6": {
+                    "type": "Moon Top Middle Right",
+                    "layer": 0
+                },
+                "15;5": {
+                    "type": "Moon Top Middle Right",
+                    "layer": 0
+                },
+                "13;5": {
+                    "type": "Moon Top Middle Left",
+                    "layer": 0
+                },
+                "12;5": {
+                    "type": "Moon Top Middle Left",
+                    "layer": 0
+                },
+                "14;5": {
+                    "type": "Moon Top Middle Right",
+                    "layer": 0
+                },
+                "11;5": {
+                    "type": "Moon Top Middle Right",
+                    "layer": 0
+                },
+                "10;5": {
+                    "type": "Moon Top Middle Right",
+                    "layer": 0
+                },
+                "9;5": {
+                    "type": "Moon Top Middle Right",
+                    "layer": 0
+                },
+                "8;5": {
+                    "type": "Moon Top Middle Left",
+                    "layer": 0
+                },
+                "7;5": {
+                    "type": "Moon Top Middle Right",
+                    "layer": 0
+                },
+                "6;5": {
+                    "type": "Moon Top Middle_2",
+                    "layer": 0
+                },
+                "5;5": {
+                    "type": "Moon Top Middle Right",
+                    "layer": 0
+                },
+                "4;5": {
+                    "type": "Moon Top Middle Left",
+                    "layer": 0
+                },
+                "3;5": {
+                    "type": "Moon Top Middle Right",
+                    "layer": 0
+                },
+                "2;5": {
+                    "type": "Moon Top Middle Right",
+                    "layer": 0
+                },
+                "1;5": {
+                    "type": "Moon Top Middle Right",
+                    "layer": 0
+                },
+                "0;6": {
+                    "type": "Moon Middle Left Left",
+                    "layer": 0
+                },
+                "0;7": {
+                    "type": "Moon Left Middle",
+                    "layer": 0
+                },
+                "0;8": {
+                    "type": "Moon Left Middle",
+                    "layer": 0
+                },
+                "0;9": {
+                    "type": "Moon Middle Left Left",
+                    "layer": 0
+                },
+                "0;5": {
+                    "type": "Moon Top Left",
+                    "layer": 0
+                },
+                "16;5": {
+                    "type": "Moon Top Left Corner",
+                    "layer": 0
+                },
+                "16;6": {
+                    "type": "Moon Center_3",
+                    "layer": 0
+                },
+                "1;6": {
+                    "type": "Moon Middle Left",
+                    "layer": 0
+                },
+                "1;7": {
+                    "type": "Moon Center_6",
+                    "layer": 0
+                },
+                "1;9": {
+                    "type": "Moon Middle Right",
+                    "layer": 0
+                },
+                "2;9": {
+                    "type": "Moon Center_5",
+                    "layer": 0
+                },
+                "1;8": {
+                    "type": "Moon Middle Left",
+                    "layer": 0
+                },
+                "2;8": {
+                    "type": "Moon Center_2",
+                    "layer": 0
+                },
+                "2;6": {
+                    "type": "Moon Middle Right",
+                    "layer": 0
+                },
+                "2;7": {
+                    "type": "Moon Center_7",
+                    "layer": 0
+                },
+                "3;7": {
+                    "type": "Moon Center_6",
+                    "layer": 0
+                },
+                "3;8": {
+                    "type": "Moon Middle Left",
+                    "layer": 0
+                },
+                "3;9": {
+                    "type": "Moon Middle Left",
+                    "layer": 0
+                },
+                "4;9": {
+                    "type": "Moon Middle Right",
+                    "layer": 0
+                },
+                "4;8": {
+                    "type": "Moon Center_1",
+                    "layer": 0
+                },
+                "3;6": {
+                    "type": "Moon Center_7",
+                    "layer": 0
+                },
+                "4;7": {
+                    "type": "Moon Center_7",
+                    "layer": 0
+                },
+                "4;6": {
+                    "type": "Moon Center_3",
+                    "layer": 0
+                },
+                "5;7": {
+                    "type": "Moon Middle Left",
+                    "layer": 0
+                },
+                "5;8": {
+                    "type": "Moon Center_6",
+                    "layer": 0
+                },
+                "5;9": {
+                    "type": "Moon Middle Left",
+                    "layer": 0
+                },
+                "6;9": {
+                    "type": "Moon Middle Left",
+                    "layer": 0
+                },
+                "6;8": {
+                    "type": "Moon Center_3",
+                    "layer": 0
+                },
+                "5;6": {
+                    "type": "Moon Center_2",
+                    "layer": 0
+                },
+                "6;6": {
+                    "type": "Moon Center_7",
+                    "layer": 0
+                },
+                "6;7": {
+                    "type": "Moon Middle Right",
+                    "layer": 0
+                },
+                "7;7": {
+                    "type": "Moon Center_3",
+                    "layer": 0
+                },
+                "7;6": {
+                    "type": "Moon Center_2",
+                    "layer": 0
+                },
+                "7;8": {
+                    "type": "Moon Center_7",
+                    "layer": 0
+                },
+                "7;9": {
+                    "type": "Moon Center_3",
+                    "layer": 0
+                },
+                "8;8": {
+                    "type": "Moon Center_4",
+                    "layer": 0
+                },
+                "8;7": {
+                    "type": "Moon Middle Left",
+                    "layer": 0
+                },
+                "8;6": {
+                    "type": "Moon Center_2",
+                    "layer": 0
+                },
+                "8;9": {
+                    "type": "Moon Center_3",
+                    "layer": 0
+                },
+                "9;9": {
+                    "type": "Moon Middle Left",
+                    "layer": 0
+                },
+                "9;7": {
+                    "type": "Moon Center_6",
+                    "layer": 0
+                },
+                "9;6": {
+                    "type": "Moon Middle Right",
+                    "layer": 0
+                },
+                "9;8": {
+                    "type": "Moon Center_4",
+                    "layer": 0
+                },
+                "10;9": {
+                    "type": "Moon Center_2",
+                    "layer": 0
+                },
+                "10;8": {
+                    "type": "Moon Middle Right",
+                    "layer": 0
+                },
+                "10;7": {
+                    "type": "Moon Center_6",
+                    "layer": 0
+                },
+                "10;6": {
+                    "type": "Moon Center_2",
+                    "layer": 0
+                },
+                "11;7": {
+                    "type": "Moon Center_3",
+                    "layer": 0
+                },
+                "11;8": {
+                    "type": "Moon Center_2",
+                    "layer": 0
+                },
+                "11;9": {
+                    "type": "Moon Center_6",
+                    "layer": 0
+                },
+                "12;9": {
+                    "type": "Moon Center_6",
+                    "layer": 0
+                },
+                "12;8": {
+                    "type": "Moon Center_7",
+                    "layer": 0
+                },
+                "11;6": {
+                    "type": "Moon Center_7",
+                    "layer": 0
+                },
+                "13;9": {
+                    "type": "Moon Middle Left",
+                    "layer": 0
+                },
+                "13;8": {
+                    "type": "Moon Center_2",
+                    "layer": 0
+                },
+                "14;9": {
+                    "type": "Moon Center_2",
+                    "layer": 0
+                },
+                "13;7": {
+                    "type": "Moon Center_3",
+                    "layer": 0
+                },
+                "12;6": {
+                    "type": "Moon Center_7",
+                    "layer": 0
+                },
+                "12;7": {
+                    "type": "Moon Center_5",
+                    "layer": 0
+                },
+                "13;6": {
+                    "type": "Moon Middle Right",
+                    "layer": 0
+                },
+                "14;7": {
+                    "type": "Moon Middle Left",
+                    "layer": 0
+                },
+                "14;8": {
+                    "type": "Moon Center_2",
+                    "layer": 0
+                },
+                "15;9": {
+                    "type": "Moon Center_3",
+                    "layer": 0
+                },
+                "15;8": {
+                    "type": "Moon Center_7",
+                    "layer": 0
+                },
+                "14;6": {
+                    "type": "Moon Center_1",
+                    "layer": 0
+                },
+                "15;6": {
+                    "type": "Moon Middle Right",
+                    "layer": 0
+                },
+                "15;7": {
+                    "type": "Moon Center_4",
+                    "layer": 0
+                },
+                "16;8": {
+                    "type": "Moon Center_2",
+                    "layer": 0
+                },
+                "16;9": {
+                    "type": "Moon Center_7",
+                    "layer": 0
+                },
+                "17;9": {
+                    "type": "Moon Middle Left",
+                    "layer": 0
+                },
+                "18;9": {
+                    "type": "Moon Middle Right",
+                    "layer": 0
+                },
+                "23;9": {
+                    "type": "Moon Middle Left",
+                    "layer": 0
+                },
+                "22;9": {
+                    "type": "Moon Middle Right",
+                    "layer": 0
+                },
+                "21;9": {
+                    "type": "Moon Center_7",
+                    "layer": 0
+                },
+                "20;9": {
+                    "type": "Moon Center_3",
+                    "layer": 0
+                },
+                "19;9": {
+                    "type": "Moon Middle Left",
+                    "layer": 0
+                },
+                "18;8": {
+                    "type": "Moon Center_2",
+                    "layer": 0
+                },
+                "17;7": {
+                    "type": "Moon Center_3",
+                    "layer": 0
+                },
+                "16;7": {
+                    "type": "Moon Center_1",
+                    "layer": 0
+                },
+                "17;8": {
+                    "type": "Moon Middle Left",
+                    "layer": 0
+                },
+                "18;7": {
+                    "type": "Moon Center_6",
+                    "layer": 0
+                },
+                "20;8": {
+                    "type": "Moon Center_2",
+                    "layer": 0
+                },
+                "19;7": {
+                    "type": "Moon Top Right Corner",
+                    "layer": 0
+                },
+                "19;8": {
+                    "type": "Moon Center_6",
+                    "layer": 0
+                },
+                "21;8": {
+                    "type": "Moon Center_4",
+                    "layer": 0
+                },
+                "22;8": {
+                    "type": "Moon Middle Left",
+                    "layer": 0
+                },
+                "23;8": {
+                    "type": "Moon Center_3",
+                    "layer": 0
+                },
+                "23;7": {
+                    "type": "Moon Center_3",
+                    "layer": 0
+                },
+                "17;5": {
+                    "type": "Moon Center_2",
+                    "layer": 0
+                },
+                "17;3": {
+                    "type": "Moon Center_2",
+                    "layer": 0
+                },
+                "17;2": {
+                    "type": "Moon Center_7",
+                    "layer": 0
+                },
+                "17;6": {
+                    "type": "Moon Middle Left",
+                    "layer": 0
+                },
+                "17;4": {
+                    "type": "Moon Center_6",
+                    "layer": 0
+                },
+                "18;1": {
+                    "type": "Moon Top Right",
+                    "layer": 0
+                },
+                "17;1": {
+                    "type": "Moon Top Middle Left",
+                    "layer": 0
+                },
+                "16;1": {
+                    "type": "Moon Top Left",
+                    "layer": 0
+                },
+                "19;6": {
+                    "type": "Moon Top Right",
+                    "layer": 0
+                },
+                "22;6": {
+                    "type": "Moon Top Left",
+                    "layer": 0
+                },
+                "20;7": {
+                    "type": "Moon Top Middle Left",
+                    "layer": 0
+                },
+                "21;7": {
+                    "type": "Moon Top Middle Right",
+                    "layer": 0
+                },
+                "22;7": {
+                    "type": "Moon Top Left Corner",
+                    "layer": 0
+                },
+                "10;1": {
+                    "type": "Deko_Busch",
+                    "layer": 3
+                }
             },
             "offgrid": [
                 {
@@ -218,6 +694,39 @@
                         89.0
                     ]
                 }
+            ],
+            "decorations": [
+                {
+                    "type": "Deko_Mondstein",
+                    "pos": [
+                        528,
+                        192
+                    ]
+                },
+                {
+                    "type": "Deko_Busch",
+                    "pos": [
+                        378.0,
+                        95.0
+                    ],
+                    "layer": 0
+                },
+                {
+                    "type": "Deko_Busch",
+                    "pos": [
+                        389.0,
+                        178.0
+                    ],
+                    "layer": -1
+                },
+                {
+                    "type": "Deko_Busch",
+                    "pos": [
+                        621.0,
+                        127.0
+                    ],
+                    "layer": 2
+                }
             ]
         },
         {
@@ -233,12 +742,25 @@
                 257.0
             ],
             "grid": {
-                "27;6": "Sand",
-                "32;5": "Sand",
-                "29;4": "Sand",
-                "30;6": "Sand"
+                "27;6": {
+                    "type": "Sand",
+                    "layer": 0
+                },
+                "32;5": {
+                    "type": "Sand",
+                    "layer": 0
+                },
+                "29;4": {
+                    "type": "Sand",
+                    "layer": 0
+                },
+                "30;6": {
+                    "type": "Sand",
+                    "layer": 0
+                }
             },
-            "offgrid": []
+            "offgrid": [],
+            "decorations": []
         },
         {
             "rect": [
@@ -253,12 +775,25 @@
                 208.0
             ],
             "grid": {
-                "-4;5": "Sand",
-                "-5;5": "Sand",
-                "-8;4": "Sand",
-                "-10;4": "Sand"
+                "-4;5": {
+                    "type": "Sand",
+                    "layer": 0
+                },
+                "-5;5": {
+                    "type": "Sand",
+                    "layer": 0
+                },
+                "-8;4": {
+                    "type": "Sand",
+                    "layer": 0
+                },
+                "-10;4": {
+                    "type": "Sand",
+                    "layer": 0
+                }
             },
-            "offgrid": []
+            "offgrid": [],
+            "decorations": []
         }
     ]
 }

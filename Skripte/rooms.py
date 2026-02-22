@@ -16,6 +16,12 @@ class Room:
 
         self.blocks = []
         self.objects = []
+        self.decorations = []
+
+        self.layer_3 = []
+        self.layer_2 = []
+        self.layer_1 = []
+        self.layer_foreground = []
 
         self.neighbors = []
 
