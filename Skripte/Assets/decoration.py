@@ -12,6 +12,34 @@ class Decoration(Object):
         "Busch": ("Terrain/Terrain.png", (0, 128, 48, 48), 64, 64),
         "Mond": ("Background/Moons.png", (0, 0, 128, 128), 128, 128),
         "Sonne": ("Background/Moons.png", (128, 0, 128, 128), 128, 128),
+
+        #Stars
+        "Stern1": ("Background/Stars.png", (0, 0, 16, 16), 16, 16),
+        "Stern2": ("Background/Stars.png", (16, 0, 16, 16), 16, 16),
+        "Stern3": ("Background/Stars.png", (32, 0, 16, 16), 16, 16),
+        "Stern4": ("Background/Stars.png", (48, 0, 16, 16), 16, 16),
+        "Stern5": ("Background/Stars.png", (64, 0, 16, 16), 16, 16),
+        "Stern6": ("Background/Stars.png", (80, 0, 16, 16), 16, 16),
+        "Stern7": ("Background/Stars.png", (96, 0, 16, 16), 16, 16),
+        "Stern8": ("Background/Stars.png", (112, 0, 16, 16), 16, 16),
+        "Stern9": ("Background/Stars.png", (0, 16, 16, 16), 16, 16),
+        "Stern10": ("Background/Stars.png", (16, 16, 16, 16), 16, 16),
+        "Stern11": ("Background/Stars.png", (32, 16, 16, 16), 16, 16),
+        "Stern12": ("Background/Stars.png", (48, 16, 16, 16), 16, 16),
+        "Stern13": ("Background/Stars.png", (64, 16, 16, 16), 16, 16),
+        "Stern14": ("Background/Stars.png", (80, 16, 16, 16), 16, 16),
+        "Stern15": ("Background/Stars.png", (96, 16, 16, 16), 16, 16),
+        "Stern16": ("Background/Stars.png", (112, 16, 16, 16), 16, 16),
+        "Stern17": ("Background/Stars.png", (0, 32, 16, 16), 16, 16),
+        "Stern18": ("Background/Stars.png", (16, 32, 16, 16), 16, 16),
+        "Stern19": ("Background/Stars.png", (32, 32, 16, 16), 16, 16),
+        "Stern20": ("Background/Stars.png", (48, 32, 16, 16), 16, 16),
+        "Stern21": ("Background/Stars.png", (64, 32, 16, 16), 16, 16),
+        "Stern22": ("Background/Stars.png", (80, 32, 16, 16), 16, 16),
+        "Stern23": ("Background/Stars.png", (96, 32, 16, 16), 16, 16),
+        "Stern24": ("Background/Stars.png", (112, 32, 16, 16), 16, 16),
+
+
     }
 
     def __init__(self, x, y, deco_type):
