@@ -9,12 +9,23 @@ from Skripte.constants import WIDTH, HEIGHT
 class MainMenu:
     def __init__(self):
         os.environ["SDL_VIDEO_WINDOW_POS"] = "center"
+        current_surface = pygame.display.get_surface()
         settings_page = options.SettingsPage()
         settings = settings_page.get_settings()
         if settings and settings.get("fullscreen", False):
             self.screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
             self.width = WIDTH
             self.height = HEIGHT
+        elif settings and settings.get("window_size") and not current_surface:
+            self.width, self.height = settings["window_size"]
+            self.screen = pygame.display.set_mode(
+                (self.width, self.height), pygame.RESIZABLE
+            )
+        elif current_surface:
+            self.width, self.height = current_surface.get_size()
+            self.screen = pygame.display.set_mode(
+                (self.width, self.height), pygame.RESIZABLE
+            )
         else:
             self.screen = pygame.display.set_mode(
                 (WIDTH // 2, HEIGHT // 2), pygame.RESIZABLE
