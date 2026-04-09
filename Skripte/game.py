@@ -18,11 +18,20 @@ class Game:
         os.environ["SDL_VIDEO_WINDOW_POS"] = "center"
         pygame.display.set_caption("Abyssplatformer")
 
+        current_surface = pygame.display.get_surface()
         settings_page = options.SettingsPage()
         settings = settings_page.get_settings()
         if settings and settings.get("fullscreen", False):
             self.screen = pygame.display.set_mode(
                 (constants.WIDTH, constants.HEIGHT), pygame.FULLSCREEN
+            )
+        elif current_surface:
+            self.screen = pygame.display.set_mode(
+                current_surface.get_size(), pygame.RESIZABLE
+            )
+        elif settings and settings.get("window_size"):
+            self.screen = pygame.display.set_mode(
+                tuple(settings["window_size"]), pygame.RESIZABLE
             )
         else:
             self.screen = pygame.display.set_mode(
@@ -51,6 +60,34 @@ class Game:
         self.debug_scroll_off_x = 0
         self.debug_scroll_off_y = 0
         self.load_save("Data/GameSave/savefile.json")
+
+    def get_room_scale(self):
+        if not self.room:
+            return 1.0
+
+        screen_w, screen_h = self.screen.get_size()
+        if self.room.rect.width <= 0 or self.room.rect.height <= 0:
+            return 1.0
+
+        # Use cover scaling so the viewport never exceeds room bounds.
+        return max(screen_w / self.room.rect.width, screen_h / self.room.rect.height)
+
+    def sync_camera_scale(self):
+        self.camera.resize(*self.screen.get_size())
+        self.camera.set_zoom(self.get_room_scale())
+
+    def save_window_size(self, filepath="Data/Settings/settings.json"):
+        try:
+            with open(filepath, "r") as f:
+                settings = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError):
+            settings = {}
+
+        settings["window_size"] = list(self.screen.get_size())
+        settings.setdefault("fullscreen", False)
+
+        with open(filepath, "w") as f:
+            json.dump(settings, f, indent=4)
 
     def load_save(self, filepath):
         try:
@@ -107,41 +144,56 @@ class Game:
     def draw(self):
         self.screen.fill(constants.BACKGROUND_COLOR)
 
+        world_scale = self.get_room_scale()
+        self.camera.set_zoom(world_scale)
+
         if self.room:
             self.camera.update(self.player, self.room)
             cam_off = self.camera.offset
-            self.background_manager.draw_layer(self.screen, self.global_decorations, cam_off, 4)
+            self.background_manager.draw_layer(
+                self.screen, self.global_decorations, cam_off, 4, world_scale
+            )
 
             # 2. Parallax Hintergrund-Layer (3, 2, 1)
-            self.background_manager.draw_layer(self.screen, self.room.layer_3, cam_off, 3)
-            self.background_manager.draw_layer(self.screen, self.room.layer_2, cam_off, 2)
-            self.background_manager.draw_layer(self.screen, self.room.layer_1, cam_off, 1)
+            self.background_manager.draw_layer(
+                self.screen, self.room.layer_3, cam_off, 3, world_scale
+            )
+            self.background_manager.draw_layer(
+                self.screen, self.room.layer_2, cam_off, 2, world_scale
+            )
+            self.background_manager.draw_layer(
+                self.screen, self.room.layer_1, cam_off, 1, world_scale
+            )
 
             # 3. Spielebene (Ebene 0)
-            ox, oy = int(cam_off.x), int(cam_off.y)
-            for r in self.active_rooms:
-                for block in r.blocks:
-                    block.draw(self.screen, ox, oy)
-                for obj in r.objects:
-                    obj.draw(self.screen, ox, oy)
-                for deco in r.decorations:
-                    deco.draw(self.screen, ox, oy)
+            ox, oy = cam_off.x, cam_off.y
+            for block in self.room.blocks:
+                block.draw(self.screen, ox, oy, world_scale)
+            for obj in self.room.objects:
+                obj.draw(self.screen, ox, oy, world_scale)
+            for deco in self.room.decorations:
+                deco.draw(self.screen, ox, oy, world_scale)
 
             # 4. Spieler (Ebene 0)
-        self.player.draw(self.screen, int(self.camera.offset.x), int(self.camera.offset.y))
+        self.player.draw(
+            self.screen, self.camera.offset.x, self.camera.offset.y, world_scale
+        )
 
         # 5. Vordergrund-Layer (Ebene -1)
         if self.room:
-            self.background_manager.draw_layer(self.screen, self.room.layer_foreground, cam_off, -1)
+            self.background_manager.draw_layer(
+                self.screen, self.room.layer_foreground, cam_off, -1, world_scale
+            )
 
         if self.debug:
-            debug_surf = pygame.Surface((constants.WIDTH, constants.HEIGHT))
+            screen_w, screen_h = self.screen.get_size()
+            debug_surf = pygame.Surface((screen_w, screen_h))
             debug_surf.fill((30, 30, 30))
             scroll_x = (
-                self.player.rect.centerx - (constants.WIDTH / 2) / self.zoom_level
+                self.player.rect.centerx - (screen_w / 2) / self.zoom_level
             ) + self.debug_scroll_off_x
             scroll_y = (
-                self.player.rect.centery - (constants.HEIGHT / 2) / self.zoom_level
+                self.player.rect.centery - (screen_h / 2) / self.zoom_level
             ) + self.debug_scroll_off_y
 
             for r in self.active_rooms:
@@ -273,7 +325,7 @@ class Game:
             shadow = self.font.render(text, True, (0, 0, 0))
 
             text_width = img.get_width()
-            x_pos = constants.WIDTH - text_width - 20
+            x_pos = self.screen.get_width() - text_width - 20
             y_pos = 10 + i * 20
 
             self.screen.blit(shadow, (x_pos + 1, y_pos + 1))
@@ -284,22 +336,26 @@ class Game:
         game_menu.GameMenu().run()
 
     def run(self):
+        self.sync_camera_scale()
+
         while True:
             self.clock.tick(constants.FPS)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                if event.type == pygame.VIDEORESIZE:
+                    self.width, self.height = event.size
+                    self.screen = pygame.display.set_mode(
+                        (self.width, self.height), pygame.RESIZABLE
+                    )
+                    self.save_window_size()
+                    self.sync_camera_scale()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
+                        self.save_window_size()
                         self.save_game("Data/GameSave/savefile.json")
                         self.open_game_menu()
-                    elif event.type == pygame.VIDEORESIZE:
-                        self.width, self.height = event.size
-                        self.screen = pygame.display.set_mode(
-                            (self.width, self.height), pygame.RESIZABLE
-                        )
-                        self.camera.resize(self.width, self.height)
 
                     # Debug
                     if event.key == pygame.K_F3:

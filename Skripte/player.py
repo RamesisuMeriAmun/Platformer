@@ -69,6 +69,7 @@ class Player(pygame.sprite.Sprite):
         self.objects = []
 
         self.hit = False
+        self._scaled_sprite_cache = {}
 
     # Movement
     def handle_input(self):
@@ -171,11 +172,10 @@ class Player(pygame.sprite.Sprite):
 
         if not self.is_pogoing:
             if (
-                    keys[self.key_jump]
-                    and self.y_vel < 0
-                    and self.jump_hold_time < self.MAX_JUMP_HOLD
-                    and self.jump_count
-                    == 0
+                keys[self.key_jump]
+                and self.y_vel < 0
+                and self.jump_hold_time < self.MAX_JUMP_HOLD
+                and self.jump_count == 0
             ):
                 self.y_vel -= self.JUMP_HOLD_FORCE
                 self.jump_hold_time += 1
@@ -372,8 +372,8 @@ class Player(pygame.sprite.Sprite):
                 self.rect.y = self.auto_dash_target_y
 
             if (
-                    self.rect.x == self.auto_dash_target_x
-                    and self.rect.y == self.auto_dash_target_y
+                self.rect.x == self.auto_dash_target_x
+                and self.rect.y == self.auto_dash_target_y
             ):
                 self.auto_dashing = False
                 self.dashing = False  # Setzt auch den normalen Dash zurück
@@ -418,16 +418,27 @@ class Player(pygame.sprite.Sprite):
         self.update_jump()
         self.update_sprite()
 
-    def draw(self, screen, offset_x=0, offset_y=0):
-        draw_pos = self.sprite.get_rect(
-            midbottom=(
-                self.rect.midbottom[0] - int(offset_x),
-                self.rect.midbottom[1] - int(offset_y),
-            )
+    def draw(self, screen, offset_x=0, offset_y=0, scale=1.0):
+        midbottom = (
+            int((self.rect.midbottom[0] - float(offset_x)) * scale),
+            int((self.rect.midbottom[1] - float(offset_y)) * scale),
         )
-        screen.blit(self.sprite, draw_pos)
 
-        self.combat.draw(screen, offset_x, offset_y)
+        if abs(scale - 1.0) < 1e-6:
+            sprite_to_draw = self.sprite
+        else:
+            src_w, src_h = self.sprite.get_size()
+            target_size = (max(1, int(src_w * scale)), max(1, int(src_h * scale)))
+            cache_key = (id(self.sprite), target_size)
+            sprite_to_draw = self._scaled_sprite_cache.get(cache_key)
+            if sprite_to_draw is None:
+                sprite_to_draw = pygame.transform.smoothscale(self.sprite, target_size)
+                self._scaled_sprite_cache = {cache_key: sprite_to_draw}
+
+        draw_pos = sprite_to_draw.get_rect(midbottom=midbottom)
+        screen.blit(sprite_to_draw, draw_pos)
+
+        self.combat.draw(screen, offset_x, offset_y, scale)
 
     def draw_debug(self, screen, offset_x, offset_y):
 
