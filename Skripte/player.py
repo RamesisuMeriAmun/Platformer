@@ -26,6 +26,10 @@ class Player(pygame.sprite.Sprite):
         self.y_vel = 0
         self.falling_time = 0
 
+        # 67
+        self.six_seven = False
+        self.six_seven_pressed = False
+
         # Jump
         self.jump_count = 0
         self.jump_pressed = False
@@ -83,6 +87,13 @@ class Player(pygame.sprite.Sprite):
                     self.move_left(constants.VEL)
                 elif keys[pygame.K_d]:
                     self.move_right(constants.VEL)
+
+        if keys[pygame.K_6]:
+            if not self.six_seven_pressed:
+                self.six_seven = not self.six_seven
+                self.six_seven_pressed = True
+        else:
+            self.six_seven_pressed = False
 
         # Jump
         if keys[pygame.K_SPACE]:
@@ -334,6 +345,8 @@ class Player(pygame.sprite.Sprite):
             sprite_sheet = "fall"
         elif self.x_vel != 0:
             sprite_sheet = "run"
+        elif self.six_seven:
+            sprite_sheet = "67"
 
         if self.combat.active:  # hat noch keine eigenen sprites
             pass
