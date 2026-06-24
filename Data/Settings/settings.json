@@ -1,6 +1,10 @@
 {
     "volume": 0,
     "fullscreen": false,
+    "window_size": [
+        1920,
+        1009
+    ],
     "keybinds": {
         "jump": 32,
         "left": 97,

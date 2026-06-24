@@ -15,7 +15,8 @@ class Slider:
     def draw(self, screen, center=None):
         if center:
             self.rect.center = center
-            self.handle.centery = self.rect.centery
+        self.handle.centerx = round(self.rect.x + (self.value / 100) * self.rect.w)
+        self.handle.centery = self.rect.centery
         label_text = FONT.render(self.label, True, BLACK)
         screen.blit(label_text, (self.rect.x, self.rect.y - 30))
 

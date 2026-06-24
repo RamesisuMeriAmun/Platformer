@@ -38,18 +38,27 @@ class Attackhandler:
         line_thickness = 8
 
         if dy == -1:
-            beam = pygame.Rect(self.player.rect.centerx - (line_thickness // 2),
-                               self.player.rect.top - max_range,
-                               line_thickness, max_range)
+            beam = pygame.Rect(
+                self.player.rect.centerx - (line_thickness // 2),
+                self.player.rect.top - max_range,
+                line_thickness,
+                max_range,
+            )
         elif dx != 0:
             if dx > 0:
-                beam = pygame.Rect(self.player.rect.right,
-                                   self.player.rect.centery - (line_thickness // 2),
-                                   max_range, line_thickness)
+                beam = pygame.Rect(
+                    self.player.rect.right,
+                    self.player.rect.centery - (line_thickness // 2),
+                    max_range,
+                    line_thickness,
+                )
             else:
-                beam = pygame.Rect(self.player.rect.left - max_range,
-                                   self.player.rect.centery - (line_thickness // 2),
-                                   max_range, line_thickness)
+                beam = pygame.Rect(
+                    self.player.rect.left - max_range,
+                    self.player.rect.centery - (line_thickness // 2),
+                    max_range,
+                    line_thickness,
+                )
 
         self.dash_attack_beam_rect = beam
         self.dash_attack_beam_timer = 10
@@ -62,8 +71,11 @@ class Attackhandler:
                 if dy == -1:
                     dist = self.player.rect.top - block.rect.bottom
                 else:
-                    dist = (block.rect.left - self.player.rect.right) if dx > 0 else (
-                            self.player.rect.left - block.rect.right)
+                    dist = (
+                        (block.rect.left - self.player.rect.right)
+                        if dx > 0
+                        else (self.player.rect.left - block.rect.right)
+                    )
 
                 if 0 <= dist < closest_dist:
                     closest_dist = dist
@@ -117,16 +129,22 @@ class Attackhandler:
                         self.active = False
                         break
 
-    def draw(self, screen, offset_x, offset_y):
+    def draw(self, screen, offset_x, offset_y, scale=1.0):
+        def _scaled_rect(rect):
+            return pygame.Rect(
+                int((rect.x - float(offset_x)) * scale),
+                int((rect.y - float(offset_y)) * scale),
+                max(1, int(rect.width * scale)),
+                max(1, int(rect.height * scale)),
+            )
+
         # 1. Normaler Angriff
         if self.active:
-            pygame.draw.rect(screen, (255, 0, 0),
-                             (self.hitbox.x - offset_x, self.hitbox.y - offset_y,
-                              self.hitbox.width, self.hitbox.height), 2)
+            pygame.draw.rect(screen, (255, 0, 0), _scaled_rect(self.hitbox), 2)
 
         # 2. Dash-Attack Strahl
         if self.dash_attack_beam_rect and self.dash_attack_beam_timer > 0:
-            draw_rect = self.dash_attack_beam_rect.move(-offset_x, -offset_y)
+            draw_rect = _scaled_rect(self.dash_attack_beam_rect)
             pygame.draw.rect(screen, (0, 255, 255), draw_rect, 2)
             self.dash_attack_beam_timer -= 1
         else:

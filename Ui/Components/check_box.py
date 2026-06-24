@@ -11,8 +11,8 @@ class Checkbox:
         self.checked = checked
 
     def draw(self, screen, center=None):
-        # if center:
-        #     self.rect.center = center
+        if center:
+            self.rect.center = center
         label_text = FONT.render(self.label, True, BLACK)
         screen.blit(label_text, (self.rect.x + 30, self.rect.y - 2))
 

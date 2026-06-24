@@ -10,12 +10,23 @@ from Skripte.constants import WIDTH, HEIGHT
 class GameMenu:
     def __init__(self):
         os.environ["SDL_VIDEO_WINDOW_POS"] = "center"
+        current_surface = pygame.display.get_surface()
         settings_page = options.SettingsPage()
         settings = settings_page.get_settings()
         if settings and settings.get("fullscreen", False):
             self.screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
             self.width = WIDTH
             self.height = HEIGHT
+        elif settings and settings.get("window_size") and not current_surface:
+            self.width, self.height = settings["window_size"]
+            self.screen = pygame.display.set_mode(
+                (self.width, self.height), pygame.RESIZABLE
+            )
+        elif current_surface:
+            self.width, self.height = current_surface.get_size()
+            self.screen = pygame.display.set_mode(
+                (self.width, self.height), pygame.RESIZABLE
+            )
         else:
             self.screen = pygame.display.set_mode(
                 (WIDTH // 2, HEIGHT // 2), pygame.RESIZABLE
@@ -81,6 +92,21 @@ class GameMenu:
                 self.screen = pygame.display.set_mode(
                     (self.width, self.height), pygame.RESIZABLE
                 )
+                self._reflow_buttons()
+
+    def _reflow_buttons(self):
+        button_width = 300
+        button_height = 60
+        button_spacing = 40
+        num_buttons = len(self.buttons)
+        total_height = num_buttons * button_height + (num_buttons - 1) * button_spacing
+        start_y = (self.height - total_height) // 2
+        x = (self.width - button_width) // 2
+        for index, button in enumerate(self.buttons):
+            button["rect"].x = x
+            button["rect"].y = start_y + index * (button_height + button_spacing)
+            button["rect"].width = button_width
+            button["rect"].height = button_height
 
     def handle_click(self, pos):
         for button in self.buttons:
@@ -102,6 +128,8 @@ class GameMenu:
 
     def draw(self):
         self.screen.fill((30, 30, 30))
+
+        self._reflow_buttons()
 
         # Draw title
         title = self.font_large.render("PLATFORMER", True, (255, 255, 255))
